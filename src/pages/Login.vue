@@ -24,11 +24,10 @@
     },
     methods: {
       async login () {
-        console.log(this.username, this.password);
         const res = await logins({username:this.username, password:this.password});
         //const result = await banner();
 
-        console.log("res---------"+res);
+        console.log("res---------"+res.errorMsg);
         if(res.errorCode === 0){
           this.$router.push({name:'Home'})
         }
