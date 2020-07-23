@@ -11,10 +11,10 @@ let routerMode = 'hash';
 let baseImgPath;
 
 if (process.env.NODE_ENV === 'development') {
-  baseUrl = '//elm.cangdu.org';
+  baseUrl = '/api';
   baseImgPath = '/img/';
 } else {
-  baseUrl = '//elm.cangdu.org';
+  baseUrl = 'https://www.wanandroid.com';
   baseImgPath = '//elm.cangdu.org/img/';
 }
 

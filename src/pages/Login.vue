@@ -1,6 +1,6 @@
 <template>
-  <div style="align-items: center">
-    <el-image :src="url" />
+  <div id="main">
+    <el-image :src="require('../assets/logo.png')" />
     <br/>
     <el-input v-model="username" placeholder="请输入账号.." clearable />
     <br/>
@@ -11,7 +11,8 @@
 </template>
 
 <script>
-  import {logins} from '@/api/getData'
+  import {logins,banner} from '../api/getData'
+  import Home from "@/pages/Home";
 
   export default {
     name: "Login",
@@ -19,20 +20,33 @@
       return {
         username: '',
         password: '',
-        url: require("../assets/logo.png")
       }
     },
     methods: {
       async login () {
         console.log(this.username, this.password);
-        const res = await logins({user_name:this.username, password:this.password});
-        console.log("res---------"+res)
+        const res = await logins({username:this.username, password:this.password});
+        //const result = await banner();
+
+        console.log("res---------"+res);
+        if(res.errorCode === 0){
+          this.$router.push({name:'Home'})
+        }
       }
     }
   }
 </script>
 
 <style scoped>
+  #main{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 600px;
+    height: 400px;
+    margin-left: -300px;
+    margin-top: -200px;
+  }
   .el-image{
     width: 120px;
     height: 120px;

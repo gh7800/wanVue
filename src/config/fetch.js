@@ -8,7 +8,7 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 		let dataStr = ''; //数据拼接字符串
 		Object.keys(data).forEach(key => {
 			dataStr += key + '=' + data[key] + '&';
-		})
+		});
 
 		if (dataStr !== '') {
 			dataStr = dataStr.substr(0, dataStr.lastIndexOf('&'));
@@ -22,11 +22,12 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 			method: type,
 			headers: {
 				'Accept': 'application/json',
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
 			},
 			mode: "cors",
 			cache: "force-cache"
-		}
+		};
 
 		if (type === 'POST') {
 			Object.defineProperty(requestConfig, 'body', {
@@ -62,7 +63,7 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 			requestObj.onreadystatechange = () => {
 				if (requestObj.readyState === 4) {
 					if (requestObj.status === 200) {
-						let obj = requestObj.response
+						let obj = requestObj.response;
 						if (typeof obj !== 'object') {
 							obj = JSON.parse(obj);
 						}
