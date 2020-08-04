@@ -6,15 +6,17 @@
  * baseImgPath: 图片存放地址
  *
  */
+import {publicPath} from "../../vue.config";
+
 let baseUrl = '';
 let routerMode = 'hash';
 let baseImgPath;
 
 if (process.env.NODE_ENV === 'development') {
-  baseUrl = '/api';
+  baseUrl = publicPath;
   baseImgPath = '/img/';
 } else {
-  baseUrl = 'https://www.wanandroid.com';
+  baseUrl = publicPath;
   baseImgPath = '//elm.cangdu.org/img/';
 }
 

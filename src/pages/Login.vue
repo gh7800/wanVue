@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  import {logins,banner} from '../api/getData'
+  import {login} from '../api/getData'
   import Home from "@/pages/Home";
 
   export default {
@@ -24,11 +24,11 @@
     },
     methods: {
       async login () {
-        const res = await logins({username:this.username, password:this.password});
+        const res = await login({username:this.username, password:this.password});
         //const result = await banner();
 
-        console.log("res---------"+res.errorMsg);
-        if(res.errorCode === 0){
+        console.log("res---------"+res.data.toString());
+        if(res.success){
           this.$router.push({name:'Home'})
         }
       }
