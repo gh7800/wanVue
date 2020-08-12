@@ -1,10 +1,11 @@
-import states from './states'
+import state from './state'
 import actions from './actions'
 import mutations from './mutations'
 import getters from './getters'
 
 export default {
-    states,
+    //namespaced:true,
+    state,
     actions,
     mutations,
     getters

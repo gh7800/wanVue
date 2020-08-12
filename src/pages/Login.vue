@@ -26,9 +26,13 @@
                 this.$store.dispatch('login', {username: this.username, password: this.password})
                     .then(async res => {
                         console.log(res)
-                        this.$message.success('登录成功')
                         if (res.success) {
+                            this.$message.success('登录成功')
+                            const name = this.$store.getters.getUser
+                            console.log("----"+name)
                             await this.$router.push({name: 'Home'})
+                        }else{
+                            this.$message.error(res.message)
                         }
                     })
                     .catch(error => {
