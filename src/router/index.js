@@ -22,7 +22,7 @@ const routes = [
                 component: () => import('../views/About.vue')
             }, {
                 path: '/main',
-                component: () => import('../views/Home.vue')
+                component: () => import('../views/HelloWord.vue')
             }
         ]
     },
