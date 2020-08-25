@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../pages/Home'
 import Login from '../pages/Login'
+import addUser from '../pages/addUser'
+import UserList from  '../pages/UserList'
 
 Vue.use(VueRouter);
 
@@ -18,14 +20,22 @@ const routes = [
         children: [
             {
                 path: '/about',
-                name: 'About',
                 component: () => import('../views/About.vue')
             }, {
                 path: '/main',
                 component: () => import('../views/HelloWord.vue')
+            },
+            {
+                path:'/addUser',
+                component: () => import('../pages/addUser')
+            },
+            {
+                path : '/UserList',
+                component : ()=> import('../pages/UserList')
             }
         ]
     },
+
     /*{
         path: '/about',
         name: 'About',

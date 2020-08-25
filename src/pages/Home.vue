@@ -10,8 +10,8 @@
                             <i class="el-icon-edit"></i>
                             <span>导航一</span>
                         </template>
-                        <el-menu-item>项目1</el-menu-item>
-                        <el-menu-item>项目2</el-menu-item>
+                        <el-menu-item index="addUser">添加人员</el-menu-item>
+                        <el-menu-item index="UserList">人员列表</el-menu-item>
                         <el-menu-item>项目3</el-menu-item>
                         <el-menu-item>项目4</el-menu-item>
                     </el-submenu>
@@ -49,6 +49,7 @@
     export default {
         computed: {
             defaultActive: function () {
+                console.log('xx')
                 return this.$route.path.replace('/', '');
             }
         },
