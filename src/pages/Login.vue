@@ -1,12 +1,17 @@
 <template>
     <div id="main">
         <!--<el-image :src="require('../assets/logo.png')" />-->
-        <br/>
-        <el-input v-model="username" placeholder="请输入账号.." clearable/>
-        <br/>
-        <el-input v-model="password" placeholder="请输入密码.." align="center" show-password/>
-        <br/>
-        <el-button type="primary" v-on:click="login">登 录</el-button>
+        <el-form :model="loginForm">
+            <el-form-item>
+                <el-col>
+                    <el-input v-model="loginForm.username" placeholder="请输入账号.." clearable/>
+                </el-col>
+                <el-col>
+                    <el-input v-model="loginForm.password" placeholder="请输入密码.." align="center" show-password/>
+                </el-col>
+                <el-button type="primary" v-on:click="login">登 录</el-button>
+            </el-form-item>
+        </el-form>
     </div>
 </template>
 
@@ -17,21 +22,23 @@
         name: "Login",
         data() {
             return {
-                username: '',
-                password: '',
+                loginForm: {
+                    username: '',
+                    password: ''
+                }
             }
         },
         methods: {
             login() {
-                this.$store.dispatch('login', {username: this.username, password: this.password})
+                this.$store.dispatch('login', {username: this.loginForm.username, password: this.loginForm.password})
                     .then(async res => {
                         console.log(res)
                         if (res.success) {
                             this.$message.success('登录成功')
                             const name = this.$store.getters.getUser
-                            console.log("----"+name)
+                            console.log("----" + name)
                             await this.$router.push({name: 'Home'})
-                        }else{
+                        } else {
                             this.$message.error(res.message)
                         }
                     })
