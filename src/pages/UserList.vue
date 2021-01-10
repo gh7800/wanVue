@@ -1,5 +1,5 @@
 <template>
-    <el-table style="width: 100%;" height="180" :data="tableData" border="true">
+    <el-table style="width: 100%;" height="100%" :data="tableData" border="true" >
         <el-table-column style="width: 100px;color: maroon" prop="name" label="名称" />
         <el-table-column style="width: 100px" prop="age" label="年龄"/>
         <el-table-column style="width: 100px" prop="gender" label="性别"/>

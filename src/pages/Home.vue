@@ -1,10 +1,10 @@
 <template>
     <div>
         <el-col>
-            <Hamburger></Hamburger>
+            <!-- <Hamburger></Hamburger> -->
         </el-col>
         <el-row style="height: 100%;">
-            <el-col style="height: 100%;width: 20%;">
+            <el-col style="height: 100%;width: 15%;">
                 <el-menu
                         router
                         background-color="#545c64"
@@ -72,7 +72,7 @@
 </template>
 
 <script>
-    import Hamburger from '@/components/Hamburger'
+    // import Hamburger from '@/components/Hamburger'
     export default {
         computed: {
             defaultActive: function () {
@@ -81,7 +81,7 @@
         },
         name: "Home",
         comments:{
-            Hamburger
+            // Hamburger
         }
     }
 </script>
