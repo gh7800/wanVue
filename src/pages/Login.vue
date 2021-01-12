@@ -16,8 +16,6 @@
 </template>
 
 <script>
-    //import {login} from '../api/getData'
-
     export default {
         name: "Login",
         data() {
@@ -40,7 +38,7 @@
                             this.$message.success('登录成功')
                             const name = this.$store.getters.getUser
                             console.log("----" + name)
-                             this.$router.push({name: 'Home'})
+                             this.$router.replace('Home')
                         } else {
                             this.$message.error(res.message)
                         }
