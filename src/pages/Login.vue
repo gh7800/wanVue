@@ -1,17 +1,21 @@
 <template>
-    <div id="main">
-        <!--<el-image :src="require('../assets/logo.png')" />-->
-        <el-form :model="loginForm">
+<div>
+    <div>
+        <el-image :src="require('../assets/2.jpg')" style="width:100%;height:100%"/>
+    </div>
+    <div id="main" >
+        <!-- <el-image :src="require('../assets/logo.png')" /> -->
+        <el-form :model="loginForm" >
             <el-form-item>
-                <el-col>
+                <el-col >
                     <el-input v-model="loginForm.username" placeholder="请输入账号.." clearable/>
-                </el-col>
-                <el-col>
+                <br/>
                     <el-input v-model="loginForm.password" placeholder="请输入密码.." align="center" show-password/>
                 </el-col>
                 <el-button :loading='loading' type="primary" v-on:click="login">登 录</el-button>
             </el-form-item>
         </el-form>
+    </div>
     </div>
 </template>
 

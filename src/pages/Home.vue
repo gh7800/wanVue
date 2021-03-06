@@ -1,7 +1,7 @@
 <template>
   <div class="main" style="height:100vh;">
     <el-header style="height: 76px">
-      <span>移动办公</span>
+      <span style="backgroudColor:red">移动办公</span>
     </el-header>
     <el-container style="background: #f2f2f2; height: 100%">
       <el-aside width="13%" display="block" position="absolute" overfolw-y="scroll" >
