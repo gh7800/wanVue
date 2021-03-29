@@ -1,6 +1,6 @@
 <template>
     <div id="main">
-        <!--<el-image :src="require('../assets/logo.png')" />-->
+        <el-image :src="require('../assets/logo.png')" />
         <el-form :model="loginForm">
             <el-form-item>
                 <el-col>
