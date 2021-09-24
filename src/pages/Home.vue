@@ -2,6 +2,8 @@
   <div class="main" style="height:100vh;">
     <el-header style="height: 76px">
       <span style="backgroudColor:red">移动办公</span>
+    <el-header style="height: 76px;background:#F2f2f2" >
+      <span style="height:76px;background:#ff0000">移动办公</span>
     </el-header>
     <el-container style="background: #f2f2f2; height: 100%">
       <el-aside width="13%" display="block" position="absolute" overfolw-y="scroll" >
@@ -11,6 +13,7 @@
           active-text-color="#ffd04b"
           text-color="#fff"
           style="height:100%"
+
         >
           <el-submenu index="1">
             <template slot="title">

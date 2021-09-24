@@ -20,7 +20,7 @@ function closeLoading(loading) {
 let loading
 service.interceptors.request.use(
   config => {
-    if (config.method != 'get' && !config.loading) {
+    if (config.method !== 'get' && !config.loading) {
       loading = Loading.service({
         lock: true,
         text: '努力请求中...',
