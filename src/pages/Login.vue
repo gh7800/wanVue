@@ -1,9 +1,9 @@
 <template>
-    <div>
+        <div style="height:100%;">
         <div>
-            <el-image :src="require('../assets/2.jpg')" style="width:100%;height:100%"/>
+            <el-image :src="require('../assets/2.jpg')" style="width:100%;height:100vh;"/>
         </div>
-        <!-- <el-image :src="require('../assets/logo.png')" /> -->
+
         <div id="main">
             <el-image :src="require('../assets/logo.png')"/>
             <el-form :model="loginForm">
