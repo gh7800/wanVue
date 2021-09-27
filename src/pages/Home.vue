@@ -1,12 +1,10 @@
 <template>
     <div class="main" style="height:100vh;">
-        <el-header style="height: 76px;background:darkgrey;">
-            <el-row style="margin-left: 1px">
-                <el-button style="height:76px;">环雅丽都移动办公系统</el-button>
-                <el-button style="height:76px;">环雅丽都移动办公系统</el-button>
-                <el-button style="height:76px;">环雅丽都移动办公系统</el-button>
-                <el-button style="height:76px;">环雅丽都移动办公系统</el-button>
-                <el-button style="height:76px;">环雅丽都移动办公系统</el-button>
+        <el-header style="height: 75px;background:darkgrey;width: 100%">
+            <el-row :gutter="24" class="el-row" type="flex" >
+                <el-image :src="require('../assets/2.jpg')" style="width: 13%;height: 75px;" ></el-image>
+                <el-button style="height: 70px;">环雅丽都移动办公系统</el-button>
+
             </el-row>
 
         </el-header>
