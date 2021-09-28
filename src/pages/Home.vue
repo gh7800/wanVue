@@ -1,25 +1,17 @@
 <template>
     <div class="main" style="height:100vh;">
-        <el-header style="height: 75px;background:darkgrey;width: 100%">
-            <el-row :gutter="24" class="el-row" type="flex" >
-                <el-image :src="require('../assets/2.jpg')" style="width: 13%;height: 75px;" ></el-image>
-                <el-button style="height: 70px;">环雅丽都移动办公系统</el-button>
-
-            </el-row>
-
-        </el-header>
-        <el-container style="background: #f2f2f2; height: 100%">
-            <el-aside width="13%" display="block" position="absolute" overfolw-y="scroll">
+        <el-container style="background: #f2f2f2;width: 100%; height: 100%;padding: 0;align-content: flex-start;"
+                      direction="horizontal">
+            <el-aside display="block" style="width: 13%;height:100%;padding: 0;overflow-y: hidden;">
+                <el-image :src="require('../assets/2.jpg')" style="width: 100%;height: 75px;"></el-image>
                 <el-menu
                         router
                         background-color="#545c64"
                         active-text-color="#ffd04b"
                         text-color="#fff"
-                        style="height:100%"
-
-                >
+                        style="height:100%;padding: 0">
                     <el-submenu index="1">
-                        <template slot="title">
+                        <template slot="title" style="padding: 0">
                             <i class="el-icon-edit"></i>
                             <span>公文管理</span>
                         </template>
@@ -69,8 +61,15 @@
                     </el-submenu>
                 </el-menu>
             </el-aside>
-            <el-main>
-
+            <el-main style="background-color: white;padding: 0">
+                <el-container class="el-container" style="background-color: gray;padding: 0;" direction="horizontal">
+                    <i class="el-icon-menu" style="height: 30px;width: 30px;"></i>
+                    <span >移动办公系统</span>
+                    <el-col >
+                        <el-image :src="require('../assets/logo.png')" style="width: 60px;height: 60px;"></el-image>
+                        <span>切换账号</span>
+                    </el-col>
+                </el-container>
             </el-main>
         </el-container>
     </div>
@@ -92,4 +91,5 @@
 </script>
 
 <style scoped>
+
 </style>
