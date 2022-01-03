@@ -78,6 +78,7 @@
             </el-row>
           </el-row>
         </el-container>
+        <UserList></UserList>
       </el-main>
     </el-container>
   </div>
@@ -85,6 +86,8 @@
 
 <script>
 // import Hamburger from '@/components/Hamburger'
+import UserList from './UserList.vue'
+
 export default {
   name: "Home",
   data() {
@@ -97,6 +100,7 @@ export default {
   },
   comments: {
     // Hamburger
+    UserList
   },
 }
 </script>

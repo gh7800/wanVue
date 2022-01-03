@@ -2,8 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../pages/Home'
 import Login from '../pages/Login'
-import addUser from '../pages/addUser'
-import UserList from  '../pages/UserList'
 
 Vue.use(VueRouter);
 
