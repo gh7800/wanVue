@@ -2,7 +2,7 @@ const IS_PROD = ['production', 'prod'].includes(process.env.NODE_ENV);
 
 module.exports = {
     //publicPath: IS_PROD ? process.env.VUE_APP_PUBLIC_PATH : "./", // 默认'/'，部署应用包时的基本 URL
-    publicPath: '/api', // 默认'/'，部署应用包时的基本 URL
+    publicPath: '/', // 默认'/'，部署应用包时的基本 URL
     // outputDir: process.env.outputDir || 'dist', // 'dist', 生产环境构建文件的目录
     // assetsDir: "", // 相对于outputDir的静态资源(js、css、img、fonts)目录
     lintOnSave: false,
@@ -17,19 +17,20 @@ module.exports = {
           errors: true
         },
         open: true, // 是否打开浏览器
-        host: "localhost",
-        port: "8080", // 代理断就
+        // host: "localhost",
+        // port: "8080", // 代理断就
         https: false,
         hotOnly: false, // 热更新
         proxy: {
             "/api": {
-                target: "http://bangong.bjxchw.com/", // 目标代理接口地址
+                // target: "http://bangong.bjxchw.com/", // 目标代理接口地址
+                target: "http://localhost:8000/", 
                 secure: false,
                 changeOrigin: true, // 开启代理，在本地创建一个虚拟服务端
                 ws: true, // 是否启用websockets
-                pathRewrite: {
-                    "^/api": "/"
-                }
+                // pathRewrite: {
+                //     "^/api": "api"
+                // }
             }
         }
     }

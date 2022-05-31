@@ -1,34 +1,36 @@
-import {login} from '../../api/user'
+import { login } from '../../api/user'
 import { resetRouter } from '@/router'
-import {getToken,setToken,setUserinfo} from '../../utils/auth'
+import { getToken, setToken, setUserinfo } from '../../utils/auth'
 
 const actions = {
-    login({commit},userInfo) {
+    login({ commit }, userInfo) {
 
-        const {username,password} = userInfo
-        return new Promise((resolve,reject) => {
+        const { username, password } = userInfo
+        return new Promise((resolve, reject) => {
 
-            login({username, password}).then(response => {
-                const {data } = response
-                //commit('SET_TOKEN',data.token)
-                
-                setToken(data.token)
-                setUserinfo(data.userInfo)
+            login({ username, password })
+                .then(response => {
+                    const { data } = response
+                    //commit('SET_TOKEN',data.token)
 
-                resolve(response)
+                    setToken(data.token)
+                    setUserinfo(data.userInfo)
 
-            }).catch(error => {
-                reject(error)
-            })
+                    resolve(response)
+
+                })
+                .catch(error => {
+                    reject(error)
+                })
         })
     },
 
-    logout({commit}){
+    logout({ commit }) {
 
     }
 }
 
 export default {
-    namespaced : true,
+    namespaced: true,
     actions
 }
