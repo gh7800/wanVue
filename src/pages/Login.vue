@@ -38,7 +38,7 @@
                 this.$store.dispatch('login/login', this.loginForm)
                     .then(res => {
                         this.loading = true
-                        console.log(res)
+
                         if (res.success) {
                             this.$message.success('登录成功')
                             const name = this.$store.getters.getUser
