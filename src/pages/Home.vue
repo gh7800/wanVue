@@ -111,7 +111,7 @@ export default {
       false;
     },
     setHide() {
-      isCollapse = !isCollapse;
+      this.isCollapse = !this.isCollapse;
     },
     collapseStatus() {
       this.collapseBtnClick = this.isCollapse;

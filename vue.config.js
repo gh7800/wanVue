@@ -3,9 +3,9 @@ const IS_PROD = ['production', 'prod'].includes(process.env.NODE_ENV);
 module.exports = {
     //publicPath: IS_PROD ? process.env.VUE_APP_PUBLIC_PATH : "./", // 默认'/'，部署应用包时的基本 URL
     publicPath: '/', // 默认'/'，部署应用包时的基本 URL
-    // outputDir: process.env.outputDir || 'dist', // 'dist', 生产环境构建文件的目录
+    outputDir: process.env.outputDir || 'dist', // 'dist', 生产环境构建文件的目录
     // assetsDir: "", // 相对于outputDir的静态资源(js、css、img、fonts)目录
-    lintOnSave: false,
+    lintOnSave: false,//`eslint-load` 检查是否有错误，触发编译失败
     runtimeCompiler: true, // 是否使用包含运行时编译器的 Vue 构建版本
     productionSourceMap: !IS_PROD, // 生产环境的 source map
     parallel: require("os").cpus().length > 1,
@@ -23,14 +23,14 @@ module.exports = {
         hotOnly: false, // 热更新
         proxy: {
             "/api": {
-                // target: "http://bangong.bjxchw.com/", // 目标代理接口地址
-                target: "http://localhost:8000/", 
+                target: "http://xcoa.hwapp.site/", // 目标代理接口地址
+                // target: "http://localhost:8080/", 
                 secure: false,
                 changeOrigin: true, // 开启代理，在本地创建一个虚拟服务端
                 ws: true, // 是否启用websockets
-                // pathRewrite: {
-                //     "^/api": "api"
-                // }
+                pathRewrite: {
+                    "^/api": ""
+                }
             }
         }
     }
