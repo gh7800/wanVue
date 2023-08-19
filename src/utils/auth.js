@@ -2,7 +2,7 @@ const TokenKey = 'bjxchw_oa_token'
 const RoleKey = 'bjxchw_oa_role'
 const UserInfoKey = 'bjxchw_oa_info'
 
-export function getToken() {
+export function getToken() {``
   return sessionStorage.getItem(TokenKey)
 }
 

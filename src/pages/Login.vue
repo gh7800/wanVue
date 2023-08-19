@@ -13,7 +13,7 @@
                         <br/>
                         <el-input v-model="loginForm.password" placeholder="请输入密码.." align="center" show-password/>
                     </el-col>
-                    <el-button :loading='loading' type="primary" v-on:click="login">登 录</el-button>
+                    <el-button :loading="this.loading" type="primary" v-on:click="login">登 录</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -34,21 +34,23 @@
         },
         methods: {
             login() {
-                this.loading = false
+                this.loading = true
                 this.$store.dispatch('login/login', this.loginForm)
                     .then(res => {
-                        this.loading = true
-                        console.log(res)
+                        this.loading = false
+                        //console.log(res)
+
                         if (res.success) {
                             this.$message.success('登录成功')
-                            const name = this.$store.getters.getUser
-                            console.log("----" + name)
+                            //const name = this.$store.getters.getUser
+                            //console.log("----" + name)
                             this.$router.replace('Home')
                         } else {
                             this.$message.error(res.message)
                         }
                     })
                     .catch(error => {
+                        this.loading = false
                         console.log(error)
                     })
             }

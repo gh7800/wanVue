@@ -14,7 +14,7 @@
           <el-image :src="require('../assets/2.jpg')" style="width: auto; height: 75px; margin: 0" v-model="isCollapse">
           </el-image>
           <el-submenu index="1">
-            <template slot="title" style="padding: 0">
+            <template slot="title">
               <i class="el-icon-edit"></i>
               <span>公文管理</span>
             </template>

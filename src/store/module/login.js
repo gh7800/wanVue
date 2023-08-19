@@ -7,7 +7,6 @@ const actions = {
 
         const { username, password } = userInfo
         return new Promise((resolve, reject) => {
-
             login({ username, password })
                 .then(response => {
                     const { data } = response
