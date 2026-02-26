@@ -10,7 +10,7 @@
     "clear": "npm cache clean --force"
   },
   "dependencies": {
-    "axios": "^0.20.0",
+    "axios": "^1.13.5",
     "core-js": "^3.6.5",
     "element-ui": "^2.15.1",
     "vue": "^2.6.11",
