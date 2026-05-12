@@ -44,7 +44,7 @@
                             this.$message.success('登录成功')
                             //const name = this.$store.getters.getUser
                             //console.log("----" + name)
-                            this.$router.replace('Home')
+                            this.$router.replace('/home')
                         } else {
                             this.$message.error(res.message)
                         }

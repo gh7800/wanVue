@@ -6,7 +6,7 @@ import router from '@/router'
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  withCredentials: true, // send cookies when cross-domain requests
+  withCredentials: false, // 关闭 cookie，使用 token 认证
   timeout: 1000 * 60 // request timeout
 })
 

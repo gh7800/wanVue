@@ -2,7 +2,7 @@ const TokenKey = 'bjxchw_oa_token'
 const RoleKey = 'bjxchw_oa_role'
 const UserInfoKey = 'bjxchw_oa_info'
 
-export function getToken() {``
+export function getToken() {
   return sessionStorage.getItem(TokenKey)
 }
 
@@ -23,8 +23,12 @@ export function getRole() {
 }
 
 export function getUserInfo() {
-  let userInfo = sessionStorage.getItem(UserInfoKey)
-  return userInfo ? JSON.parse(userInfo) : {}
+  try {
+    let userInfo = sessionStorage.getItem(UserInfoKey)
+    return userInfo ? JSON.parse(userInfo) : {}
+  } catch (e) {
+    return {}
+  }
 }
 
 export function setUserinfo(info) {
@@ -36,5 +40,7 @@ export function setRole(role) {
 }
 
 export function cleanUserInfo() {
-  sessionStorage.clear()
+  sessionStorage.removeItem(TokenKey)
+  sessionStorage.removeItem(RoleKey)
+  sessionStorage.removeItem(UserInfoKey)
 }

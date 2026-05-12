@@ -2,15 +2,9 @@ import request  from '../utils/request'
 
 export function login(data) {
     return request({
-        url: 'auth/login',
-        loading:true,
+        url: '/auth/login',  // 去掉开头的 /，让 baseURL 生效，然后代理重写
+        loading: true,
         method: 'POST',
         data
     })
-    // return request({
-    //     url: 'api/login',
-    //     loading: true,
-    //     method: 'post',
-    //     data
-    // })
 }

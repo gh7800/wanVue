@@ -18,19 +18,23 @@ module.exports = {
         },
         open: true, // 是否打开浏览器
         // host: "localhost",
-        // port: "8080", // 代理断就
+        port: 8080, // 开发服务器端口
         https: false,
         hotOnly: false, // 热更新
         proxy: {
-            "/api": {
-                // target: "http://bangong.bjxchw.com/", // 目标代理接口地址
-                target: "http://localhost:8000/", 
+            // 登录接口代理（不需要 /api 前缀）
+            "/auth": {
+                target: "http://localhost:8000/",
                 secure: false,
-                changeOrigin: true, // 开启代理，在本地创建一个虚拟服务端
-                ws: true, // 是否启用websockets
-                // pathRewrite: {
-                //     "^/api": "api"
-                // }
+                changeOrigin: true,
+                ws: true
+            },
+            // 其他业务接口代理（需要 /api 前缀）
+            "/api": {
+                target: "http://localhost:8000/",
+                secure: false,
+                changeOrigin: true,
+                ws: true
             }
         }
     }

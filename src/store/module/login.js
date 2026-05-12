@@ -13,7 +13,7 @@ const actions = {
                     //commit('SET_TOKEN',data.token)
 
                     setToken(data.token)
-                    setUserinfo(data.userInfo)
+                    setUserinfo(data)
 
                     resolve(response)
 

@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(NODE_OPTIONS=--openssl-legacy-provider yarn dev)",
+      "Bash(curl -s http://localhost:8080)",
+      "Bash(curl -s http://localhost:8081)",
+      "Bash(pkill -f \"vue-cli-service\")"
+    ]
+  }
+}

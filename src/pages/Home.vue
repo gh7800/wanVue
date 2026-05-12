@@ -7,12 +7,16 @@
         padding: 0;
         align-content: flex-start;
       " direction="horizontal">
-      <el-aside display="block" style="width: auto; height: 100%; padding: 0; overflow-y: hidden"
+      <el-aside display="block" :style="{ width: isCollapse ? '64px' : '200px', height: '100%', padding: 0, overflow: 'hidden' }"
         @mouseenter.native="handleOpen" @mouseleave.native="handleClose">
         <el-menu router background-color="#545c64" active-text-color="#ffd04b" text-color="#fff" :collapse="isCollapse"
-          style="height: 100%; padding: 0,width = auto">
+          style="height: 100%">
           <el-image :src="require('../assets/2.jpg')" style="width: auto; height: 75px; margin: 0" v-model="isCollapse">
           </el-image>
+          <el-menu-item index="main">
+            <i class="el-icon-s-home"></i>
+            <span slot="title">首页</span>
+          </el-menu-item>
           <el-submenu index="1">
             <template slot="title">
               <i class="el-icon-edit"></i>
@@ -76,12 +80,12 @@
             <el-row type="flex" class="row-bg" justify="space-between" align="middle">
               <el-row align="middle" justify="center" type="flex">
                 <el-avatar :src="require('../assets/logo.png')" @click="avatarClick"></el-avatar>
-                <span style="padding-right: 16px; padding-left: 10px; color: white">名称</span>
+                <span style="padding-right: 16px; padding-left: 10px; color: white">{{ userName }}</span>
               </el-row>
             </el-row>
           </el-row>
         </el-container>
-        <UserList></UserList>
+        <router-view />
       </el-main>
     </el-container>
   </div>
@@ -89,7 +93,8 @@
 
 <script>
 // import Hamburger from '@/components/Hamburger'
-import UserList from "./UserList.vue";
+
+import { getUserInfo } from '../utils/auth'
 
 export default {
   name: "Home",
@@ -97,6 +102,12 @@ export default {
     return {
       isCollapse: false,
     };
+  },
+  computed: {
+    userName() {
+      const info = getUserInfo()
+      return info.real_name || info.username || '用户1'
+    }
   },
   methods: {
     avatarClick() {
@@ -120,11 +131,24 @@ export default {
   },
   comments: {
     // Hamburger
-    UserList,
   },
 };
 </script>
 
-<style scoped>
-
+<style>
+.el-menu--collapse .el-submenu__icon-arrow {
+  display: block;
+  right: 4px;
+}
+.el-menu--collapse .el-menu-item i,
+.el-menu--collapse .el-submenu__title i {
+  margin-left: 0;
+}
+.el-menu-item,
+.el-submenu__title {
+  text-align: left !important;
+}
+.el-aside {
+  transition: width 0.3s;
+}
 </style>
