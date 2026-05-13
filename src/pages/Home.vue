@@ -65,10 +65,10 @@
           </el-submenu>
           <el-submenu index="6">
             <template slot="title">
-              <i class="el-icon-edit"></i>
+              <i class="el-icon-setting"></i>
               <span>系统设置</span>
             </template>
-            <el-menu-item>用户管理</el-menu-item>
+            <el-menu-item index="userManager">用户管理</el-menu-item>
             <el-menu-item>App管理</el-menu-item>
             <el-menu-item>角色权限管理</el-menu-item>
             <el-menu-item>个人信息</el-menu-item>
@@ -95,11 +95,11 @@
                 <div class="user-info">
                   <el-avatar :src="require('../assets/icon_logo.png')" class="user-avatar" @click="avatarClick"></el-avatar>
                   <span class="user-name">{{ userName }}</span>
-                  <el-dropdown class="user-dropdown">
+                  <el-dropdown class="user-dropdown" @command="handleCommand">
                     <i class="el-icon-arrow-down dropdown-icon"></i>
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item>个人中心</el-dropdown-item>
-                      <el-dropdown-item divided>退出登录</el-dropdown-item>
+                      <el-dropdown-item command="profile">个人中心</el-dropdown-item>
+                      <el-dropdown-item divided command="logout">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
                 </div>
@@ -160,6 +160,24 @@ export default {
     refreshPage() {
       location.reload();
     },
+    handleCommand(command) {
+      if (command === 'logout') {
+        this.$confirm('确定要退出登录吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$store.dispatch('login/logout').then(() => {
+            this.$message.success('退出成功')
+            this.$router.push('/')
+          }).catch(() => {
+            this.$message.error('退出失败')
+          })
+        }).catch(() => {})
+      } else if (command === 'profile') {
+        this.$message.info('个人中心功能开发中')
+      }
+    }
   },
   comments: {
     // Hamburger

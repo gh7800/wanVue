@@ -39,6 +39,10 @@ const routes = [
             {
                 path : '/UserList',
                 component : ()=> import('../pages/UserList')
+            },
+            {
+                path: '/userManager',
+                component: () => import('../pages/system/UserManger/UserManager')
             }
         ]
     },

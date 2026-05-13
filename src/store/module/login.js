@@ -1,6 +1,6 @@
-import { login } from '../../api/user'
+import { login, logout } from '../../api/user'
 import { resetRouter } from '@/router'
-import { getToken, setToken, setUserinfo } from '../../utils/auth'
+import { getToken, setToken, setUserinfo, removeToken, cleanUserInfo } from '../../utils/auth'
 
 const actions = {
     login({ commit }, userInfo) {
@@ -25,7 +25,16 @@ const actions = {
     },
 
     logout({ commit }) {
-
+        return new Promise((resolve, reject) => {
+            logout()
+                .then(() => {
+                    cleanUserInfo()
+                    resolve()
+                })
+                .catch(error => {
+                    reject(error)
+                })
+        })
     }
 }
 
