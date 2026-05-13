@@ -62,7 +62,7 @@ src/
 │   └── Test.vue
 ├── views/                   # 子页面（懒加载）
 │   ├── About.vue
-│   └── HelloWord.vue
+│   └── Main.vue
 └── components/              # 公共组件
     └── HelloWorld.vue
 ```

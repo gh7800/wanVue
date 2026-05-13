@@ -9,10 +9,17 @@
       " direction="horizontal">
       <el-aside display="block" :style="{ width: isCollapse ? '64px' : '200px', height: '100%', padding: 0, overflow: 'hidden' }"
         @mouseenter.native="handleOpen" @mouseleave.native="handleClose">
-        <el-menu router background-color="#545c64" active-text-color="#ffd04b" text-color="#fff" :collapse="isCollapse"
-          style="height: 100%">
-          <el-image :src="require('../assets/2.jpg')" style="width: auto; height: 75px; margin: 0" v-model="isCollapse">
-          </el-image>
+        <el-menu router 
+          background-color="#1a1f2e" 
+          active-text-color="#5482EE" 
+          text-color="#b8c5d6" 
+          :collapse="isCollapse"
+          style="height: 100%; border-right: none;"
+          class="custom-menu">
+          <div class="logo-container">
+            <el-image :src="require('../assets/icon_logo.png')" class="logo-image" v-model="isCollapse">
+            </el-image>
+          </div>
           <el-menu-item index="main">
             <i class="el-icon-s-home"></i>
             <span slot="title">首页</span>
@@ -70,17 +77,32 @@
       </el-aside>
       <el-main style="background-color: white; padding: 0">
         <el-container class="el-container">
-          <el-row style="background-color: gray; width: 100%; height: 75px" type="flex" justify="space-between">
+          <el-row style="background-color: #fff; width: 100%; height: 75px; border-bottom: 1px solid #e8e8e8" type="flex" justify="space-between">
             <el-row style="height: 100%" type="flex" align="middle" justify="start">
-              <el-button @click="collapseStatus">
-                <i class="el-icon-menu" style="padding:10px;"></i>
+              <el-button @click="collapseStatus" class="collapse-btn" title="收起/展开菜单">
+                <i class="el-icon-s-fold"></i>
               </el-button>
-              <span style="width: 130px">移动办公系统</span>
+              <span style="width: 130px; font-size: 16px; font-weight: bold; color: #333">移动办公系统</span>
             </el-row>
-            <el-row type="flex" class="row-bg" justify="space-between" align="middle">
-              <el-row align="middle" justify="center" type="flex">
-                <el-avatar :src="require('../assets/logo.png')" @click="avatarClick"></el-avatar>
-                <span style="padding-right: 16px; padding-left: 10px; color: white">{{ userName }}</span>
+            <el-row type="flex" class="header-right" justify="space-between" align="middle">
+              <el-row class="header-actions" align="middle" justify="center" type="flex">
+                <el-button class="header-btn" @click="toggleFullscreen" title="全屏">
+                  <i class="el-icon-full-screen"></i>
+                </el-button>
+                <el-button class="header-btn" @click="refreshPage" title="刷新">
+                  <i class="el-icon-refresh"></i>
+                </el-button>
+                <div class="user-info">
+                  <el-avatar :src="require('../assets/icon_logo.png')" class="user-avatar" @click="avatarClick"></el-avatar>
+                  <span class="user-name">{{ userName }}</span>
+                  <el-dropdown class="user-dropdown">
+                    <i class="el-icon-arrow-down dropdown-icon"></i>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item>个人中心</el-dropdown-item>
+                      <el-dropdown-item divided>退出登录</el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                </div>
               </el-row>
             </el-row>
           </el-row>
@@ -128,6 +150,16 @@ export default {
       this.collapseBtnClick = this.isCollapse;
       this.isCollapse = !this.isCollapse;
     },
+    toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    },
+    refreshPage() {
+      location.reload();
+    },
   },
   comments: {
     // Hamburger
@@ -150,5 +182,191 @@ export default {
 }
 .el-aside {
   transition: width 0.3s;
+}
+.collapse-btn {
+  border: none;
+  background: transparent;
+  color: #8a9ab0;
+  font-size: 16px;
+  padding: 0;
+  width: 36px;
+  height: 36px;
+  margin: 0 8px 0 4px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.collapse-btn:hover {
+  background: rgba(84, 130, 238, 0.1);
+  color: #5482EE;
+  transform: translateY(-1px);
+}
+
+.header-right {
+  padding-right: 20px;
+}
+
+.header-actions {
+  gap: 8px;
+}
+
+.header-btn {
+  border: none;
+  background: transparent;
+  color: #8a9ab0;
+  font-size: 16px;
+  padding: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-btn:hover {
+  background: rgba(84, 130, 238, 0.1);
+  color: #5482EE;
+  transform: translateY(-1px);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 12px;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #f8faff 0%, #ffffff 100%);
+  border: 1px solid #e8eaf6;
+  border-radius: 24px;
+  box-shadow: 0 2px 8px rgba(84, 130, 238, 0.08);
+  transition: all 0.3s ease;
+}
+
+.user-info:hover {
+  box-shadow: 0 4px 12px rgba(84, 130, 238, 0.15);
+  border-color: #d9e2f7;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.user-avatar:hover {
+  transform: scale(1.05);
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1f2e;
+}
+
+.user-dropdown {
+  cursor: pointer;
+}
+
+.dropdown-icon {
+  color: #8a9ab0;
+  font-size: 12px;
+  transition: all 0.3s ease;
+}
+
+.user-info:hover .dropdown-icon {
+  color: #5482EE;
+  transform: rotate(180deg);
+}
+
+/* Logo 容器样式 */
+.logo-container {
+  height: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background: linear-gradient(135deg, #1a1f2e 0%, #252b3d 100%);
+  border-bottom: 1px solid rgba(84, 130, 238, 0.1);
+  overflow: hidden;
+}
+
+.logo-image {
+  width: auto;
+  height: 55px;
+}
+
+/* 自定义菜单样式 */
+.custom-menu {
+  background-color: #1a1f2e !important;
+}
+
+.custom-menu .el-menu-item,
+.custom-menu .el-submenu__title {
+  color: #b8c5d6 !important;
+  background-color: transparent !important;
+  font-weight: 500;
+}
+
+.custom-menu .el-menu-item:hover,
+.custom-menu .el-submenu__title:hover {
+  background-color: rgba(84, 130, 238, 0.15) !important;
+  color: #fff !important;
+}
+
+.custom-menu .el-menu-item.is-active {
+  background: linear-gradient(90deg, rgba(84, 130, 238, 0.25) 0%, rgba(84, 130, 238, 0.05) 100%) !important;
+  color: #5482EE !important;
+  border-left: 3px solid #5482EE;
+}
+
+.custom-menu .el-menu-item.is-active i {
+  color: #5482EE !important;
+}
+
+.custom-menu .el-submenu.is-active .el-submenu__title {
+  color: #5482EE !important;
+}
+
+.custom-menu .el-submenu.is-active .el-submenu__title i {
+  color: #5482EE !important;
+}
+
+.custom-menu i {
+  color: #8a9ab0 !important;
+  margin-right: 10px;
+}
+
+.custom-menu .el-menu-item:hover i,
+.custom-menu .el-submenu__title:hover i {
+  color: #fff !important;
+}
+
+/* 子菜单样式 */
+.custom-menu .el-menu--inline {
+  background-color: #141824 !important;
+}
+
+.custom-menu .el-menu--inline .el-menu-item {
+  background-color: transparent !important;
+  color: #8a9ab0 !important;
+}
+
+.custom-menu .el-menu--inline .el-menu-item:hover {
+  background-color: rgba(84, 130, 238, 0.1) !important;
+  color: #fff !important;
+}
+
+.custom-menu .el-menu--inline .el-menu-item.is-active {
+  background: linear-gradient(90deg, rgba(84, 130, 238, 0.2) 0%, transparent 100%) !important;
+  color: #5482EE !important;
+  border-left: 3px solid #5482EE;
 }
 </style>

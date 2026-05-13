@@ -5,7 +5,7 @@
         </div>
 
         <div id="main">
-            <el-image :src="require('../assets/logo.png')"/>
+            <el-image :src="require('../assets/icon_logo.png')" class="logo-image"/>    
             <el-form :model="loginForm">
                 <el-form-item>
                     <el-col>
@@ -82,5 +82,11 @@
 
     .el-button {
         width: 300px;
+    }
+    .logo-image {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 20px;
+        display: block;
     }
 </style>

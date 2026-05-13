@@ -30,7 +30,7 @@ const routes = [
                 component: () => import('../views/About.vue')
             }, {
                 path: '/main',
-                component: () => import('../views/HelloWord.vue')
+                component: () => import('../views/Main.vue')
             },
             {
                 path:'/addUser',
