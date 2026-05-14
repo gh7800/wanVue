@@ -36,7 +36,7 @@ export function addUser(data) {
 export function updateUser(uuid, data) {
   return request({
     url: `/api/user/update/${uuid}`,
-    method: 'post',
+    method: 'put',
     data
   })
 }

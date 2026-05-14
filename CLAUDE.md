@@ -54,15 +54,14 @@ src/
 ├── config/
 │   ├── env.js               # 环境配置（baseUrl/routerMode）
 │   └── fetch.js             # 遗留 fetch/XMLHttpRequest 封装
-├── pages/                   # 页面组件
+├── views/                   # 页面（懒加载）
+│   ├── About.vue
+│   ├── Main.vue
 │   ├── Login.vue            # 登录页（根路由 "/"）
 │   ├── Home.vue             # 主布局（侧边栏 + 顶栏 + 内容区）
 │   ├── UserList.vue         # 用户列表
 │   ├── addUser.vue          # 新增用户（占位）
 │   └── Test.vue
-├── views/                   # 子页面（懒加载）
-│   ├── About.vue
-│   └── Main.vue
 └── components/              # 公共组件
     └── HelloWorld.vue
 ```

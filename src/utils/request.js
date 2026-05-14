@@ -23,7 +23,7 @@ service.interceptors.request.use(
     if (config.method !== 'get' && !config.loading) {
       loading = Loading.service({
         lock: true,
-        text: '努力请求中...',
+        text: '加载中...',
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
@@ -64,7 +64,8 @@ service.interceptors.response.use(
           Message({
             message: res.message || 'Error',
             type: 'error',
-            duration: 60 * 1000
+            duration: 3 * 1000,
+            showClose: true
           })
         }
 
@@ -84,12 +85,28 @@ service.interceptors.response.use(
     Message({
       message: error.message,
       type: 'error',
-      duration: 5 * 1000
+      duration: 3 * 1000,
+      showClose: true
     })
 
-    if (error.response.status === 401) {
-      sessionStorage.clear()
-      router.push('/login')
+    if (error.response) {
+      const status = error.response.status
+      
+      if (status === 401) {
+        // 未授权，清除登录信息并跳转登录页
+        sessionStorage.clear()
+        router.push('/')
+        Message.error('登录已过期，请重新登录')
+      } else if (status === 404) {
+        // API 接口不存在
+        Message.error('请求的资源不存在')
+      } else if (status === 500) {
+        // 服务器错误
+        Message.error('服务器内部错误')
+      } else if (status === 503) {
+        // 服务不可用
+        Message.error('服务暂时不可用')
+      }
     }
     return Promise.reject(error)
   }

@@ -1,4 +1,5 @@
 const IS_PROD = ['production', 'prod'].includes(process.env.NODE_ENV);
+const path = require('path');
 
 module.exports = {
     //publicPath: IS_PROD ? process.env.VUE_APP_PUBLIC_PATH : "./", // 默认'/'，部署应用包时的基本 URL
@@ -10,6 +11,24 @@ module.exports = {
     productionSourceMap: !IS_PROD, // 生产环境的 source map
     parallel: require("os").cpus().length > 1,
     pwa: {},
+
+    // SCSS 全局变量配置
+    css: {
+        loaderOptions: {
+            scss: {
+                additionalData: `@import "~@/scss/variables.scss";`
+            }
+        }
+    },
+
+    // 路径别名
+    configureWebpack: {
+        resolve: {
+            alias: {
+                '@': path.resolve(__dirname, 'src')
+            }
+        }
+    },
 
     devServer: {
         overlay: { // 让浏览器 overlay 同时显示警告和错误

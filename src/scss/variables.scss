@@ -1,0 +1,68 @@
+// ==================== 主题色 ====================
+$primary-color: #5482EE;
+$primary-light: rgba(84, 130, 238, 0.1);
+$primary-lighter: rgba(84, 130, 238, 0.05);
+
+// 功能色
+$success-color: #67C23A;
+$warning-color: #E6A23C;
+$danger-color: #F56C6C;
+$info-color: #909399;
+
+// ==================== 文字色 ====================
+$text-primary: #1a1f2e;
+$text-regular: #606266;
+$text-secondary: #909399;
+$text-placeholder: #C0C4CC;
+
+// ==================== 背景色 ====================
+$bg-white: #ffffff;
+$bg-gray: #f2f2f2;
+$bg-dark: #1a1f2e;
+$bg-darker: #141824;
+
+// ==================== 边框色 ====================
+$border-base: #DCDFE6;
+$border-light: #E4E7ED;
+$border-lighter: #EBEEF5;
+$border-extra-light: #F2F6FC;
+
+// ==================== 间距 ====================
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+
+// ==================== 字体大小 ====================
+$font-size-extra-small: 12px;
+$font-size-small: 13px;
+$font-size-base: 14px;
+$font-size-medium: 16px;
+$font-size-large: 18px;
+$font-size-extra-large: 20px;
+
+// ==================== 圆角 ====================
+$border-radius-small: 2px;
+$border-radius-base: 4px;
+$border-radius-medium: 8px;
+$border-radius-large: 16px;
+$border-radius-round: 20px;
+$border-radius-circle: 50%;
+
+// ==================== 阴影 ====================
+$box-shadow-base: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+$box-shadow-light: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+$box-shadow-dark: 0 4px 12px rgba(84, 130, 238, 0.15);
+
+// ==================== 侧边栏 ====================
+$sidebar-width: 200px;
+$sidebar-collapse-width: 64px;
+$sidebar-bg: #1a1f2e;
+$sidebar-text: #b8c5d6;
+$sidebar-active-text: #5482EE;
+
+// ==================== 顶部导航 ====================
+$header-height: 75px;
+$header-bg: #ffffff;
+$header-border: #e8e8e8;

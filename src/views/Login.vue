@@ -1,7 +1,7 @@
 <template>
         <div style="height:100%;" class="login-container">
         <div>
-            <!-- <el-image :src="require('../assets/2.jpg')" style="width:100%;height:100vh;"/> -->
+            <!-- <el-image :src="require('../../assets/2.jpg')" style="width:100%;height:100vh;"/> -->
         </div>
 
         <div id="main">

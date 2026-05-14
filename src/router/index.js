@@ -1,10 +1,13 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../pages/Home'
-import Login from '../pages/Login'
+import Home from '../views/Home.vue'
+import Login from '../views/Login.vue'
 import { getToken } from '../utils/auth'
 
 Vue.use(VueRouter);
+
+// 白名单路由（无需登录）
+const whiteList = ['/']
 
 const routes = [
     {
@@ -34,23 +37,68 @@ const routes = [
             },
             {
                 path:'/addUser',
-                component: () => import('../pages/addUser')
+                component: () => import('../views/addUser.vue')
             },
             {
                 path : '/UserList',
-                component : ()=> import('../pages/UserList')
+                component : ()=> import('../views/UserList.vue')
             },
             {
                 path: '/userManager',
-                component: () => import('../pages/system/UserManger/UserManager')
+                component: () => import('../views/system/userManager/UserManager.vue')
             }
         ]
     },
-
+    // 404 页面（必须放在最后）
+    {
+        path: '*',
+        name: 'NotFound',
+        component: () => import('../views/404.vue')
+    }
 ];
 
 const router = new VueRouter({
     routes
 });
+
+// 全局前置守卫
+router.beforeEach((to, from, next) => {
+    // 设置页面标题
+    document.title = to.name || '移动办公系统'
+    
+    // 获取 token
+    const hasToken = getToken()
+    
+    if (hasToken) {
+        // 已登录
+        if (to.path === '/') {
+            // 已登录访问登录页，跳转到首页
+            next('/home')
+        } else {
+            // 正常访问
+            next()
+        }
+    } else {
+        // 未登录
+        if (whiteList.includes(to.path)) {
+            // 白名单路由直接放行
+            next()
+        } else {
+            // 非白名单路由，重定向到登录页
+            next('/')
+        }
+    }
+})
+
+// 全局后置守卫
+router.afterEach((to, from) => {
+    // 可以在这里做页面统计、埋点等
+    // console.log('路由切换完成:', to.path)
+})
+
+// 全局错误处理
+router.onError((error) => {
+    console.error('路由错误:', error)
+})
 
 export default router

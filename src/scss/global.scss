@@ -1,0 +1,174 @@
+// ==================== 全局样式 ====================
+
+// 注意：variables.scss 已在 vue.config.js 中全局注入，无需重复引入
+
+// -------------------- 基础重置 --------------------
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #app {
+  height: 100%;
+  font-family: 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+  font-size: $font-size-base;
+  color: $text-regular;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// -------------------- 通用工具类 --------------------
+
+// 文字对齐
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+// 浮动
+.fl { float: left; }
+.fr { float: right; }
+.clearfix::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+// 显示/隐藏
+.hide { display: none; }
+.show { display: block; }
+.invisible { visibility: hidden; }
+
+// 弹性布局
+.flex { display: flex; }
+.flex-column { flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.flex-around {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+// 间距
+.m-xs { margin: $spacing-xs; }
+.m-sm { margin: $spacing-sm; }
+.m-md { margin: $spacing-md; }
+.m-lg { margin: $spacing-lg; }
+.m-xl { margin: $spacing-xl; }
+
+.p-xs { padding: $spacing-xs; }
+.p-sm { padding: $spacing-sm; }
+.p-md { padding: $spacing-md; }
+.p-lg { padding: $spacing-lg; }
+.p-xl { padding: $spacing-xl; }
+
+// 文字颜色
+.text-primary { color: $primary-color; }
+.text-success { color: $success-color; }
+.text-warning { color: $warning-color; }
+.text-danger { color: $danger-color; }
+.text-info { color: $info-color; }
+
+// 背景色
+.bg-white { background-color: $bg-white; }
+.bg-gray { background-color: $bg-gray; }
+.bg-primary { background-color: $primary-color; }
+
+// 字体大小
+.fs-small { font-size: $font-size-small; }
+.fs-base { font-size: $font-size-base; }
+.fs-medium { font-size: $font-size-medium; }
+.fs-large { font-size: $font-size-large; }
+
+// 字体粗细
+.fw-normal { font-weight: normal; }
+.fw-bold { font-weight: bold; }
+
+// 文字省略
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ellipsis-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// 光标样式
+.cursor-pointer { cursor: pointer; }
+.cursor-not-allowed { cursor: not-allowed; }
+
+// -------------------- 滚动条样式 --------------------
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: $border-lighter;
+  border-radius: $border-radius-small;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $border-base;
+  border-radius: $border-radius-small;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: $text-secondary;
+}
+
+// -------------------- Element UI 覆盖 --------------------
+
+// 按钮样式优化
+.el-button {
+  border-radius: $border-radius-medium;
+  
+  &--primary {
+    background: linear-gradient(135deg, $primary-color 0%, darken($primary-color, 8%) 100%);
+    border: none;
+    
+    &:hover,
+    &:focus {
+      background: linear-gradient(135deg, lighten($primary-color, 5%) 0%, $primary-color 100%);
+    }
+  }
+}
+
+// 卡片样式
+.el-card {
+  border-radius: $border-radius-medium;
+  border: none;
+  box-shadow: $box-shadow-light;
+}
+
+// 表格样式
+.el-table {
+  border-radius: $border-radius-medium;
+  overflow: hidden;
+}
+
+// 输入框样式
+.el-input__inner {
+  border-radius: $border-radius-medium;
+}
+
+// 分页样式
+.el-pagination {
+  margin-top: $spacing-md;
+  text-align: right;
+}
