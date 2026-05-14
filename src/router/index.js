@@ -46,6 +46,18 @@ const routes = [
             {
                 path: '/userManager',
                 component: () => import('../views/system/userManager/UserManager.vue')
+            },
+            {
+                path: '/departmentManager',
+                component: () => import('../views/system/department/DepartmentManager.vue')
+            },
+            {
+                path: '/roleManager',
+                component: () => import('../views/system/role/RoleManager.vue')
+            },
+            {
+                path: '/userInfo',
+                component: () => import('../views/system/userInfo/UserInfo.vue')
             }
         ]
     },

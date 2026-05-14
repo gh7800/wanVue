@@ -69,9 +69,9 @@
               <span>系统设置</span>
             </template>
             <el-menu-item index="userManager">用户管理</el-menu-item>
-            <el-menu-item>App管理</el-menu-item>
-            <el-menu-item>角色权限管理</el-menu-item>
-            <el-menu-item>个人信息</el-menu-item>
+            <el-menu-item index="departmentManager">部门管理</el-menu-item>
+            <el-menu-item index="roleManager">角色管理</el-menu-item>
+            <el-menu-item index="userInfo">个人信息</el-menu-item>
           </el-submenu>
         </el-menu>
       </el-aside>
@@ -82,7 +82,7 @@
               <el-button @click="collapseStatus" class="collapse-btn" title="收起/展开菜单">
                 <i class="el-icon-s-fold"></i>
               </el-button>
-              <span style="width: 130px; font-size: 16px; font-weight: bold; color: #333">移动办公系统</span>
+              <span style="width: 130px; font-size: 16px; font-weight: bold; color: #333; margin-left: 10px;">移动办公系统</span>
             </el-row>
             <el-row type="flex" class="header-right" justify="space-between" align="middle">
               <el-row class="header-actions" align="middle" justify="center" type="flex">
@@ -207,9 +207,9 @@ export default {
   color: #8a9ab0;
   font-size: 16px;
   padding: 0;
-  width: 36px;
-  height: 36px;
-  margin: 0 8px 0 4px;
+  width: 30px;
+  height: 30px;
+  margin-left: 10px !important;
   border-radius: 8px;
   transition: all 0.3s ease;
   display: inline-flex !important;
