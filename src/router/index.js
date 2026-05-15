@@ -64,6 +64,14 @@ const routes = [
                 component: () => import('../views/system/permission/PermissionManager.vue')
             },
             {
+                path: '/permissionGroup',
+                component: () => import('../views/system/permissionGroup/PermissionGroupList.vue')
+            },
+            {
+                path: '/permissionGroup/:type/:uuid?',
+                component: () => import('../views/system/permissionGroup/PermissionGroupForm.vue')
+            },
+            {
                 path: '/plateManager',
                 component: () => import('../views/car/PlateManager.vue')
             }

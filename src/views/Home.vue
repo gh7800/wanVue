@@ -73,6 +73,7 @@
             <el-menu-item index="departmentManager">部门管理</el-menu-item>
             <el-menu-item index="roleManager">角色管理</el-menu-item>
             <el-menu-item index="permissionManager">权限字典</el-menu-item>
+            <el-menu-item index="permissionGroup">权限群组</el-menu-item>
             <el-menu-item index="userInfo">个人信息</el-menu-item>
           </el-submenu>
         </el-menu>
