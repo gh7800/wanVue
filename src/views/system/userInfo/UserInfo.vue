@@ -3,7 +3,7 @@
     <el-row :gutter="20">
       <!-- 左侧：个人资料卡片 -->
       <el-col :span="8">
-        <el-card class="profile-card">
+        <el-card class="profile-card" v-loading="loading">
           <div class="avatar-section">
             <el-avatar :size="100" :src="userInfo.avatar || defaultAvatar" class="user-avatar"></el-avatar>
             <el-upload
@@ -15,16 +15,16 @@
               <el-button size="small" type="primary" icon="el-icon-camera">更换头像</el-button>
             </el-upload>
           </div>
-          <div class="user-name">{{ userInfo.real_name || userInfo.username }}</div>
-          <div class="user-role">{{ userInfo.role && userInfo.role.name || '普通用户' }}</div>
-          <div class="user-dept">{{ userInfo.department && userInfo.department.name || '-' }}</div>
+          <div class="user-name">{{ displayName }}</div>
+          <div class="user-role">{{ roleName }}</div>
+          <div class="user-dept">{{ departmentName }}</div>
           
           <el-divider></el-divider>
           
           <div class="profile-info">
             <div class="info-item">
               <i class="el-icon-user"></i>
-              <span>{{ userInfo.username }}</span>
+              <span>{{ userInfo.username || '-' }}</span>
             </div>
             <div class="info-item">
               <i class="el-icon-phone"></i>
@@ -36,7 +36,7 @@
             </div>
             <div class="info-item">
               <i class="el-icon-time"></i>
-              <span>注册时间：{{ userInfo.create_time }}</span>
+              <span>注册时间：{{ userInfo.create_time || '-' }}</span>
             </div>
           </div>
         </el-card>
@@ -110,7 +110,12 @@ export default {
     return {
       defaultAvatar: require('@/assets/icon_logo.png'),
       activeTab: 'basic',
+      // 用户信息
       userInfo: {},
+      // 加载状态
+      loading: false,
+      saveLoading: false,
+      passwordLoading: false,
       form: {
         username: '',
         real_name: '',
@@ -129,7 +134,6 @@ export default {
           { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
         ]
       },
-      saveLoading: false,
       passwordForm: {
         old_password: '',
         new_password: '',
@@ -148,80 +152,114 @@ export default {
           { required: true, message: '请再次输入新密码', trigger: 'blur' },
           { validator: validateConfirmPassword, trigger: 'blur' }
         ]
-      },
-      passwordLoading: false
+      }
+    }
+  },
+  computed: {
+    displayName() {
+      return this.userInfo.real_name || this.userInfo.username || ''
+    },
+    roleName() {
+      return this.userInfo.role?.name || '普通用户'
+    },
+    departmentName() {
+      return this.userInfo.department?.name || '-'
     }
   },
   created() {
     this.fetchUserInfo()
   },
   methods: {
-    // 获取个人信息
+    // 获取用户信息
     async fetchUserInfo() {
+      this.loading = true
       try {
         const res = await getUserInfo()
-        this.userInfo = res.data || {}
-        // 填充表单
-        this.form = {
-          username: this.userInfo.username || '',
-          real_name: this.userInfo.real_name || '',
-          phone: this.userInfo.phone || '',
-          email: this.userInfo.email || '',
-          address: this.userInfo.address || ''
+        if (res.success) {
+          this.userInfo = res.data || {}
+          // 填充表单
+          this.form = {
+            username: this.userInfo.username || '',
+            real_name: this.userInfo.real_name || '',
+            phone: this.userInfo.phone || '',
+            email: this.userInfo.email || '',
+            address: this.userInfo.address || ''
+          }
+        } else {
+          this.$message.error(res.message || '获取个人信息失败')
         }
       } catch (error) {
+        console.error('获取个人信息失败:', error)
         this.$message.error('获取个人信息失败')
+      } finally {
+        this.loading = false
       }
     },
+
     // 保存基本信息
     handleSave() {
       this.$refs.form.validate(async (valid) => {
-        if (valid) {
-          this.saveLoading = true
-          try {
-            await updateUserInfo(this.form)
+        if (!valid) return
+        
+        this.saveLoading = true
+        try {
+          const res = await updateUserInfo({ ...this.form })
+          if (res.success) {
             this.$message.success('保存成功')
             this.fetchUserInfo()
-          } catch (error) {
-            this.$message.error('保存失败')
-          } finally {
-            this.saveLoading = false
+          } else {
+            this.$message.error(res.message || '保存失败')
           }
+        } catch (error) {
+          this.$message.error('保存失败')
+        } finally {
+          this.saveLoading = false
         }
       })
     },
+
     // 修改密码
     handleChangePassword() {
       this.$refs.passwordForm.validate(async (valid) => {
-        if (valid) {
-          this.passwordLoading = true
-          try {
-            await changePassword({
-              old_password: this.passwordForm.old_password,
-              new_password: this.passwordForm.new_password
-            })
+        if (!valid) return
+        
+        this.passwordLoading = true
+        try {
+          const res = await changePassword({
+            old_password: this.passwordForm.old_password,
+            new_password: this.passwordForm.new_password
+          })
+          
+          if (res.success) {
             this.$message.success('密码修改成功')
-            this.passwordForm = {
-              old_password: '',
-              new_password: '',
-              confirm_password: ''
-            }
-          } catch (error) {
-            this.$message.error('密码修改失败')
-          } finally {
-            this.passwordLoading = false
+            // 重置密码表单
+            this.passwordForm.old_password = ''
+            this.passwordForm.new_password = ''
+            this.passwordForm.confirm_password = ''
+            this.$refs.passwordForm.clearValidate()
+          } else {
+            this.$message.error(res.message || '密码修改失败')
           }
+        } catch (error) {
+          this.$message.error('密码修改失败')
+        } finally {
+          this.passwordLoading = false
         }
       })
     },
+
     // 上传头像
     async handleAvatarUpload({ file }) {
       const formData = new FormData()
       formData.append('avatar', file)
       try {
-        await uploadAvatar(formData)
-        this.$message.success('头像上传成功')
-        this.fetchUserInfo()
+        const res = await uploadAvatar(formData)
+        if (res.success) {
+          this.$message.success('头像上传成功')
+          this.fetchUserInfo()
+        } else {
+          this.$message.error(res.message || '头像上传失败')
+        }
       } catch (error) {
         this.$message.error('头像上传失败')
       }
@@ -248,13 +286,12 @@ export default {
     .user-name {
       font-size: 20px;
       font-weight: bold;
-      color: #333;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
     }
 
     .user-role {
       font-size: 14px;
-      color: #5482EE;
+      color: #409EFF;
       margin-bottom: 5px;
     }
 
@@ -266,22 +303,18 @@ export default {
 
     .profile-info {
       text-align: left;
+      padding: 0 20px;
 
       .info-item {
-        padding: 10px 0;
-        border-bottom: 1px solid #f0f0f0;
         display: flex;
         align-items: center;
-        gap: 10px;
-        color: #606266;
+        margin-bottom: 12px;
         font-size: 14px;
-
-        &:last-child {
-          border-bottom: none;
-        }
+        color: #606266;
 
         i {
-          color: #5482EE;
+          margin-right: 10px;
+          color: #909399;
           font-size: 16px;
         }
       }
@@ -290,7 +323,7 @@ export default {
 
   .info-form {
     max-width: 500px;
-    padding: 20px 0;
+    padding: 20px;
   }
 }
 </style>

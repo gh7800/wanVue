@@ -9,11 +9,11 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './scss/reset.scss'
 import './scss/global.scss'
 
-Vue.use(ElementUI);
-Vue.config.productionTip = false;
+Vue.use(ElementUI)
+Vue.config.productionTip = false
 
 new Vue({
   router,
   store,
   render: h => h(App)
-}).$mount('#app');
+}).$mount('#app')

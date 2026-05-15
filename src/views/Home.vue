@@ -133,7 +133,7 @@ export default {
   },
   methods: {
     avatarClick() {
-      this.$message.success("OK");
+      this.$router.push('/userInfo')
     },
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
@@ -175,7 +175,7 @@ export default {
           })
         }).catch(() => {})
       } else if (command === 'profile') {
-        this.$message.info('个人中心功能开发中')
+        this.$router.push('/userInfo')
       }
     }
   },
