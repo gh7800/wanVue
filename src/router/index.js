@@ -58,6 +58,14 @@ const routes = [
             {
                 path: '/userInfo',
                 component: () => import('../views/system/userInfo/UserInfo.vue')
+            },
+            {
+                path: '/permissionManager',
+                component: () => import('../views/system/permission/PermissionManager.vue')
+            },
+            {
+                path: '/plateManager',
+                component: () => import('../views/car/PlateManager.vue')
             }
         ]
     },

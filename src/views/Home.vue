@@ -39,6 +39,7 @@
             </template>
             <el-menu-item index="about">我的用车</el-menu-item>
             <el-menu-item index="main">用车审批</el-menu-item>
+            <el-menu-item index="plateManager">车牌管理</el-menu-item>
           </el-submenu>
           <el-submenu index="3">
             <template slot="title">
@@ -71,6 +72,7 @@
             <el-menu-item index="userManager">用户管理</el-menu-item>
             <el-menu-item index="departmentManager">部门管理</el-menu-item>
             <el-menu-item index="roleManager">角色管理</el-menu-item>
+            <el-menu-item index="permissionManager">权限字典</el-menu-item>
             <el-menu-item index="userInfo">个人信息</el-menu-item>
           </el-submenu>
         </el-menu>
