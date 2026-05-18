@@ -60,11 +60,13 @@
             {{ formatTime(scope.row.created_at) }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="250" fixed="right">
+        <el-table-column label="操作" width="200" fixed="right">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
-            <el-button size="mini" type="info" icon="el-icon-view" @click="handleDetail(scope.row)">详情</el-button>
-            <el-button size="mini" type="danger" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
+            <el-button-group size="mini">
+              <el-button type="primary" icon="el-icon-edit" @click="handleEdit(scope.row)" title="编辑"></el-button>
+              <el-button type="info" icon="el-icon-view" @click="handleDetail(scope.row)" title="详情"></el-button>
+              <el-button type="danger" icon="el-icon-delete" @click="handleDelete(scope.row)" title="删除"></el-button>
+            </el-button-group>
           </template>
         </el-table-column>
       </el-table>
@@ -247,6 +249,24 @@ export default {
   .pagination-container {
     margin-top: 20px;
     text-align: right;
+  }
+
+  .el-button-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    height: 32px;
+    
+    .el-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      width: 60px;
+      margin: 0;
+      padding: 0;
+    }
   }
 }
 </style>

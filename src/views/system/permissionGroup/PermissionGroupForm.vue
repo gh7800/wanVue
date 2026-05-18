@@ -28,29 +28,16 @@
         <div v-if="!isDetail" class="section-header">
           <el-button type="primary" icon="el-icon-plus" @click="showUserSelector = true">选择人员</el-button>
         </div>
-        <el-table :data="selectedUsers" stripe border style="width: 100%">
-          <el-table-column prop="real_name" label="姓名" min-width="120">
-            <template slot-scope="scope">
-              {{ scope.row.real_name || scope.row.username }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="username" label="用户名" min-width="120"></el-table-column>
-          <el-table-column prop="department_name" label="部门" min-width="150">
-            <template slot-scope="scope">
-              {{ scope.row.department_name || '-' }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="phone" label="手机号" min-width="130">
-            <template slot-scope="scope">
-              {{ scope.row.phone || '-' }}
-            </template>
-          </el-table-column>
-          <el-table-column v-if="!isDetail" label="操作" width="100" fixed="right">
-            <template slot-scope="scope">
-              <el-button size="mini" type="danger" icon="el-icon-delete" @click="handleRemoveUser(scope.row)">移除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+        <div v-if="selectedUsers.length > 0" class="user-waterfall">
+          <div v-for="user in selectedUsers" :key="user.uuid" class="user-card">
+            <div class="user-info">
+              <span class="user-name">{{ user.real_name || user.username }}</span>
+              <span class="user-account">{{ user.username }}</span>
+            </div>
+            <el-button v-if="!isDetail" size="mini" type="danger" icon="el-icon-delete" @click="handleRemoveUser(user)">移除</el-button>
+          </div>
+        </div>
+        <el-empty v-else description="暂无成员"></el-empty>
       </div>
 
       <!-- 权限选择区域 -->
@@ -516,6 +503,42 @@ export default {
     text-align: center;
     padding-top: 20px;
     border-top: 1px solid #ebeef5;
+  }
+
+  .user-waterfall {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    .user-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: #fff;
+      border: 1px solid #ebeef5;
+      border-radius: 4px;
+      min-width: 200px;
+      max-width: 280px;
+      flex: 1;
+
+      .user-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .user-name {
+          font-size: 14px;
+          font-weight: 500;
+          color: #303133;
+        }
+
+        .user-account {
+          font-size: 12px;
+          color: #909399;
+        }
+      }
+    }
   }
 
   .user-selector {

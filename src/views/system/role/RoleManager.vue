@@ -52,12 +52,14 @@
           </template>
         </el-table-column>
         <el-table-column prop="create_time" label="创建时间" width="180"></el-table-column>
-        <el-table-column label="操作" width="300" fixed="right">
+        <el-table-column label="操作" width="240" fixed="right">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
-            <el-button size="mini" type="success" icon="el-icon-user" @click="handleManageUsers(scope.row)">成员</el-button>
-            <el-button size="mini" type="warning" icon="el-icon-key" @click="handleManagePermissions(scope.row)">权限</el-button>
-            <el-button size="mini" type="danger" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
+            <el-button-group size="mini">
+              <el-button type="primary" icon="el-icon-edit" @click="handleEdit(scope.row)" title="编辑"></el-button>
+              <el-button type="success" icon="el-icon-user" @click="handleManageUsers(scope.row)" title="成员"></el-button>
+              <el-button type="warning" icon="el-icon-key" @click="handleManagePermissions(scope.row)" title="权限"></el-button>
+              <el-button type="danger" icon="el-icon-delete" @click="handleDelete(scope.row)" title="删除"></el-button>
+            </el-button-group>
           </template>
         </el-table-column>
       </el-table>
@@ -485,6 +487,24 @@ export default {
     display: flex;
     align-items: center;
     gap: 10px;
+  }
+
+  .el-button-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    height: 32px;
+    
+    .el-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      width: 56px;
+      margin: 0;
+      padding: 0;
+    }
   }
 }
 </style>

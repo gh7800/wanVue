@@ -82,8 +82,18 @@ service.interceptors.response.use(
     // loading.close()
     closeLoading(loading)
     console.log('err' + error) // for debug
+    
+    // 优先显示后端返回的错误消息
+    let errorMessage = error.message
+    if (error.response && error.response.data) {
+      const res = error.response.data
+      if (res.message) {
+        errorMessage = res.message
+      }
+    }
+    
     Message({
-      message: error.message,
+      message: errorMessage,
       type: 'error',
       duration: 3 * 1000,
       showClose: true

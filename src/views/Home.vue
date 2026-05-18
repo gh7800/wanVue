@@ -37,8 +37,9 @@
               <i class="el-icon-magic-stick"></i>
               <span>用车管理</span>
             </template>
-            <el-menu-item index="about">我的用车</el-menu-item>
-            <el-menu-item index="main">用车审批</el-menu-item>
+            <el-menu-item index="myCar">我的用车</el-menu-item>
+            <el-menu-item index="carApprove">用车处理</el-menu-item>
+            <el-menu-item index="carManage">用车管理</el-menu-item>
             <el-menu-item index="plateManager">车牌管理</el-menu-item>
           </el-submenu>
           <el-submenu index="3">

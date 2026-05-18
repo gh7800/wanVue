@@ -14,6 +14,7 @@ const routes = [
         path: '/',
         name: 'Login',
         component: Login,
+        meta: { title: '移动办公系统' },
         beforeEnter: (to, from, next) => {
             if (getToken()) {
                 next('/home')
@@ -74,6 +75,18 @@ const routes = [
             {
                 path: '/plateManager',
                 component: () => import('../views/car/PlateManager.vue')
+            },
+            {
+                path: '/myCar',
+                component: () => import('../views/car/MyCar.vue')
+            },
+            {
+                path: '/carApprove',
+                component: () => import('../views/car/CarApprove.vue')
+            },
+            {
+                path: '/carManage',
+                component: () => import('../views/car/CarManage.vue')
             }
         ]
     },
@@ -91,8 +104,8 @@ const router = new VueRouter({
 
 // 全局前置守卫
 router.beforeEach((to, from, next) => {
-    // 设置页面标题
-    document.title = to.name || '移动办公系统'
+    // 设置页面标题（优先使用 meta.title）
+    document.title = to.meta.title || to.name || '移动办公系统'
     
     // 获取 token
     const hasToken = getToken()
