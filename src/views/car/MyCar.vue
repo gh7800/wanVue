@@ -4,6 +4,7 @@
     <el-card class="table-card">
       <div class="table-header">
         <el-button type="primary" icon="el-icon-plus" @click="handleAdd">申请用车</el-button>
+        <el-button type="success" icon="el-icon-download" @click="handleExport" :loading="exportLoading">导出</el-button>
       </div>
 
       <!-- 用车申请列表 -->
@@ -130,6 +131,7 @@
       </el-timeline>
 
       <div slot="footer" class="dialog-footer">
+        <el-button type="success" icon="el-icon-download" @click="handleExportWord" :loading="exportWordLoading">导出审批流程</el-button>
         <el-button @click="detailDialogVisible = false">关 闭</el-button>
       </div>
     </el-dialog>
@@ -137,7 +139,7 @@
 </template>
 
 <script>
-import { getCarApplyList, createCarApply, deleteCarApply, getCarApplyDetail } from '../../api/car'
+import { getCarApplyList, createCarApply, deleteCarApply, getCarApplyDetail, exportCarApply, exportCarApplyWord } from '../../api/car'
 import { PAGINATION } from '../../config/constants'
 
 export default {
@@ -146,6 +148,8 @@ export default {
     return {
       loading: false,
       submitLoading: false,
+      exportLoading: false,
+      exportWordLoading: false,
       dialogVisible: false,
       detailDialogVisible: false,
       applyList: [],
@@ -312,6 +316,53 @@ export default {
         completed: 'info'
       }
       return map[status] || ''
+    },
+    // 导出
+    async handleExport() {
+      this.exportLoading = true
+      try {
+        const params = {
+          mine: 1
+        }
+        const blob = await exportCarApply(params)
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `我的用车申请列表_${new Date().getTime()}.xlsx`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
+        this.$message.success('导出成功')
+      } catch (error) {
+        this.$message.error('导出失败')
+      } finally {
+        this.exportLoading = false
+      }
+    },
+    // 导出审批流程Word文档
+    async handleExportWord() {
+      if (!this.currentDetail || !this.currentDetail.uuid) {
+        this.$message.error('暂无数据可导出')
+        return
+      }
+      this.exportWordLoading = true
+      try {
+        const blob = await exportCarApplyWord(this.currentDetail.uuid)
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `用车审批流程_${this.currentDetail.id}_${new Date().getTime()}.docx`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
+        this.$message.success('导出成功')
+      } catch (error) {
+        this.$message.error('导出失败')
+      } finally {
+        this.exportWordLoading = false
+      }
     }
   }
 }

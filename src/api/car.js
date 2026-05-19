@@ -178,3 +178,54 @@ export function endCarApply(uuid, data) {
     data
   })
 }
+
+/**
+ * 导出用车申请列表
+ * @param {Object} params - 查询参数
+ */
+export function exportCarApply(params) {
+  return request({
+    url: '/api/car/apply/export',
+    method: 'get',
+    params,
+    responseType: 'blob'
+  })
+}
+
+/**
+ * 导出待处理的用车审批列表
+ * @param {Object} params - 查询参数
+ */
+export function exportCarApproveTodo(params) {
+  return request({
+    url: '/api/car/approve/todo/export',
+    method: 'get',
+    params,
+    responseType: 'blob'
+  })
+}
+
+/**
+ * 导出已处理的用车审批列表
+ * @param {Object} params - 查询参数
+ */
+export function exportCarApproveDone(params) {
+  return request({
+    url: '/api/car/approve/done/export',
+    method: 'get',
+    params,
+    responseType: 'blob'
+  })
+}
+
+/**
+ * 导出审批流程Word文档
+ * @param {string} uuid - 申请UUID
+ */
+export function exportCarApplyWord(uuid) {
+  return request({
+    url: `/api/car/apply/export-word/${uuid}`,
+    method: 'get',
+    responseType: 'blob'
+  })
+}

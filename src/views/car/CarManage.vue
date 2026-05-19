@@ -38,6 +38,7 @@
     <el-card class="table-card">
       <div class="table-header">
         <el-button type="primary" icon="el-icon-plus" @click="handleAdd">申请用车</el-button>
+        <el-button type="success" icon="el-icon-download" @click="handleExport" :loading="exportLoading">导出</el-button>
       </div>
 
       <!-- 用车申请列表 -->
@@ -179,7 +180,7 @@
 </template>
 
 <script>
-import { getCarApplyList, createCarApply, deleteCarApply, getCarApplyDetail } from '../../api/car'
+import { getCarApplyList, createCarApply, deleteCarApply, getCarApplyDetail, exportCarApply } from '../../api/car'
 import { PAGINATION } from '../../config/constants'
 
 export default {
@@ -188,6 +189,7 @@ export default {
     return {
       loading: false,
       submitLoading: false,
+      exportLoading: false,
       dialogVisible: false,
       detailDialogVisible: false,
       searchForm: {
@@ -376,6 +378,32 @@ export default {
         completed: 'info'
       }
       return map[status] || ''
+    },
+    // 导出
+    async handleExport() {
+      this.exportLoading = true
+      try {
+        const params = {
+          car_type: this.searchForm.car_type,
+          status: this.searchForm.status,
+          keyword: this.searchForm.keyword,
+          mileage_status: this.searchForm.mileage_status
+        }
+        const blob = await exportCarApply(params)
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `用车申请列表_${new Date().getTime()}.xlsx`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
+        this.$message.success('导出成功')
+      } catch (error) {
+        this.$message.error('导出失败')
+      } finally {
+        this.exportLoading = false
+      }
     }
   }
 }
