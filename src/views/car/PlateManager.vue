@@ -43,9 +43,9 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="page.current"
-          :page-sizes="[10, 20, 50, 100]"
-          :page-size="page.size"
-          layout="total, sizes, prev, pager, next, jumper"
+          :page-sizes="pageSizes"
+          :page-size="page.per_page"
+          layout="sizes, prev, pager, next, jumper, total"
           :total="page.total">
         </el-pagination>
       </div>
@@ -68,6 +68,7 @@
 
 <script>
 import { getPlateList, addPlate, updatePlate, deletePlate } from '../../api/car'
+import { PAGINATION } from '../../config/constants'
 
 export default {
   name: 'PlateManager',
@@ -82,10 +83,12 @@ export default {
       },
       plateList: [],
       page: {
-        current: 1,
-        size: 10,
+        current: PAGINATION.DEFAULT_CURRENT_PAGE,
+        per_page: PAGINATION.DEFAULT_PAGE_SIZE,
         total: 0
       },
+      // 分页配置常量
+      pageSizes: PAGINATION.PAGE_SIZES,
       form: {
         uuid: null,
         plate_number: ''
@@ -108,7 +111,7 @@ export default {
       try {
         const params = {
           page: this.page.current,
-          size: this.page.size,
+          per_page: this.page.per_page,
           plate_number: this.searchForm.plate_number
         }
         const res = await getPlateList(params)

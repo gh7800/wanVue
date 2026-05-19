@@ -79,9 +79,9 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="pagination.page"
-          :page-sizes="[10, 20, 50, 100]"
+          :page-sizes="[15, 30, 100, 500]"
           :page-size="pagination.size"
-          layout="total, sizes, prev, pager, next, jumper"
+          layout="sizes, prev, pager, next, jumper, total"
           :total="pagination.total">
         </el-pagination>
       </div>
@@ -125,6 +125,7 @@ import {
   deletePermission,
   batchDeletePermission
 } from '@/api/permission'
+import { PAGINATION } from '@/config/constants'
 
 export default {
   name: 'PermissionManager',
@@ -143,7 +144,7 @@ export default {
       },
       pagination: {
         page: 1,
-        size: 10,
+        per_page: 10,
         total: 0
       },
       dialogVisible: false,

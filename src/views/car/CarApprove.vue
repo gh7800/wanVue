@@ -34,9 +34,9 @@
               @size-change="handleTodoSizeChange"
               @current-change="handleTodoCurrentChange"
               :current-page="todoPage.current"
-              :page-sizes="[10, 20, 50, 100]"
-              :page-size="todoPage.size"
-              layout="total, sizes, prev, pager, next, jumper"
+              :page-sizes="pageSizes"
+              :page-size="todoPage.per_page"
+              layout="sizes, prev, pager, next, jumper, total"
               :total="todoPage.total">
             </el-pagination>
           </div>
@@ -80,9 +80,9 @@
               @size-change="handleDoneSizeChange"
               @current-change="handleDoneCurrentChange"
               :current-page="donePage.current"
-              :page-sizes="[10, 20, 50, 100]"
-              :page-size="donePage.size"
-              layout="total, sizes, prev, pager, next, jumper"
+              :page-sizes="[15, 30, 100, 500]"
+              :page-size="donePage.per_page"
+              layout="sizes, prev, pager, next, jumper, total"
               :total="donePage.total">
             </el-pagination>
           </div>
@@ -212,6 +212,7 @@
 
 <script>
 import { getCarApproveTodo, getCarApproveDone, approveCarApply, getPlateList, getCarApplyDetail, endCarApply } from '../../api/car'
+import { PAGINATION } from '../../config/constants'
 
 export default {
   name: 'CarApprove',
@@ -227,15 +228,17 @@ export default {
       doneList: [],
       plateList: [],
       todoPage: {
-        current: 1,
-        size: 10,
+        current: PAGINATION.DEFAULT_CURRENT_PAGE,
+        per_page: PAGINATION.DEFAULT_PAGE_SIZE,
         total: 0
       },
       donePage: {
-        current: 1,
-        size: 10,
+        current: PAGINATION.DEFAULT_CURRENT_PAGE,
+        per_page: PAGINATION.DEFAULT_PAGE_SIZE,
         total: 0
       },
+      // 分页配置常量
+      pageSizes: PAGINATION.PAGE_SIZES,
       currentDetail: null,
       currentApprove: null,
       approveForm: {
@@ -302,12 +305,12 @@ export default {
       try {
         const params = {
           page: this.todoPage.current,
-          size: this.todoPage.size
+          per_page: this.todoPage.per_page
         }
         const res = await getCarApproveTodo(params)
         if (res.data) {
           this.todoList = res.data || []
-          this.todoPage.total = res.pagination ? res.pagination.total : 0
+          this.todoPage.total = res.paginator ? res.paginator.total : 0
         }
       } catch (error) {
         this.$message.error('获取待处理列表失败')
@@ -321,12 +324,12 @@ export default {
       try {
         const params = {
           page: this.donePage.current,
-          size: this.donePage.size
+          per_page: this.donePage.per_page
         }
         const res = await getCarApproveDone(params)
         if (res.data) {
           this.doneList = res.data || []
-          this.donePage.total = res.pagination ? res.pagination.total : 0
+          this.donePage.total = res.paginator ? res.paginator.total : 0
         }
       } catch (error) {
         this.$message.error('获取已处理列表失败')
@@ -481,7 +484,7 @@ export default {
     },
     // 待处理分页
     handleTodoSizeChange(val) {
-      this.todoPage.size = val
+      this.todoPage.per_page = val
       this.fetchTodoList()
     },
     handleTodoCurrentChange(val) {
@@ -490,7 +493,7 @@ export default {
     },
     // 已处理分页
     handleDoneSizeChange(val) {
-      this.donePage.size = val
+      this.donePage.per_page = val
       this.fetchDoneList()
     },
     handleDoneCurrentChange(val) {

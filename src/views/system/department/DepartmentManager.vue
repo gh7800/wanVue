@@ -84,9 +84,9 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="page.current"
-          :page-sizes="[10, 20, 50, 100]"
+          :page-sizes="[15, 30, 100, 500]"
           :page-size="page.size"
-          layout="total, sizes, prev, pager, next, jumper"
+          layout="sizes, prev, pager, next, jumper, total"
           :total="page.total">
         </el-pagination>
       </div>
@@ -151,6 +151,7 @@ import {
   deleteDepartment
 } from '@/api/department'
 import { getUserList, getCompanyList } from '@/api/userManager'
+import { PAGINATION } from '@/config/constants'
 
 export default {
   name: 'DepartmentManager',
@@ -172,7 +173,7 @@ export default {
       },
       page: {
         current: 1,
-        size: 10,
+        per_page: 10,
         total: 0
       },
       dialogVisible: false,

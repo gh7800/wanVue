@@ -14,7 +14,7 @@ const state = {
   loading: false,
   page: {
     current: 1,
-    size: 10,
+    per_page: 15,
     total: 0
   },
   searchForm: {
@@ -69,7 +69,7 @@ const actions = {
     try {
       const params = {
         page: state.page.current,
-        size: state.page.size,
+        per_page: state.page.per_page,
         ...state.searchForm
       }
       const res = await getUserList(params)

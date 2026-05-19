@@ -62,9 +62,9 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="page.current"
-          :page-sizes="[10, 20, 50, 100]"
-          :page-size="page.size"
-          layout="total, sizes, prev, pager, next, jumper"
+          :page-sizes="[15, 30, 100, 500]"
+          :page-size="page.per_page"
+          layout="sizes, prev, pager, next, jumper, total"
           :total="page.total">
         </el-pagination>
       </div>
@@ -135,6 +135,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import { PAGINATION } from '../../../config/constants'
 
 export default {
   name: 'UserManager',
@@ -145,6 +146,8 @@ export default {
       dialogTitle: '新增用户',
       submitLoading: false,
       originalForm: {},
+      // 分页配置常量
+      pageSizes: PAGINATION.PAGE_SIZES,
       form: {
         uuid: null,
         username: '',
@@ -225,7 +228,7 @@ export default {
 
     // 分页大小变化
     handleSizeChange(val) {
-      this.updatePage({ size: val })
+      this.updatePage({ per_page: val })
     },
 
     // 页码变化

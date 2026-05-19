@@ -43,9 +43,9 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="page.current"
-          :page-sizes="[10, 20, 50, 100]"
-          :page-size="page.size"
-          layout="total, sizes, prev, pager, next, jumper"
+          :page-sizes="pageSizes"
+          :page-size="page.per_page"
+          layout="sizes, prev, pager, next, jumper, total"
           :total="page.total">
         </el-pagination>
       </div>
@@ -138,6 +138,7 @@
 
 <script>
 import { getCarApplyList, createCarApply, deleteCarApply, getCarApplyDetail } from '../../api/car'
+import { PAGINATION } from '../../config/constants'
 
 export default {
   name: 'MyCar',
@@ -149,10 +150,12 @@ export default {
       detailDialogVisible: false,
       applyList: [],
       page: {
-        current: 1,
-        size: 10,
+        current: PAGINATION.DEFAULT_CURRENT_PAGE,
+        per_page: PAGINATION.DEFAULT_PAGE_SIZE,
         total: 0
       },
+      // 分页配置常量
+      pageSizes: PAGINATION.PAGE_SIZES,
       form: {
         car_type: '',
         reason: '',
@@ -187,13 +190,13 @@ export default {
       try {
         const params = {
           page: this.page.current,
-          size: this.page.size,
+          per_page: this.page.per_page,
           mine: 1
         }
         const res = await getCarApplyList(params)
         if (res.data) {
           this.applyList = res.data || []
-          this.page.total = res.pagination ? res.pagination.total : 0
+          this.page.total = res.paginator ? res.paginator.total : 0
         }
       } catch (error) {
         this.$message.error('获取用车申请列表失败')
@@ -263,7 +266,8 @@ export default {
     },
     // 分页大小变化
     handleSizeChange(val) {
-      this.page.size = val
+      this.page.per_page = val
+      this.page.current = 1
       this.fetchApplyList()
     },
     // 页码变化

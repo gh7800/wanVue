@@ -71,8 +71,8 @@ service.interceptors.response.use(
 
         return Promise.reject(new Error(res.message || 'Error'))
       } else {
-        if (res.pagination) {
-          res.pagination['current-page'] = res.pagination.current_page
+        if (res.paginator) {
+          res.paginator['current-page'] = res.paginator.current
         }
         return res
       }

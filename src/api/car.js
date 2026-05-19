@@ -4,7 +4,7 @@ import request from '../utils/request'
  * 获取车牌列表
  * @param {Object} params - 查询参数
  * @param {number} params.page - 页码
- * @param {number} params.size - 每页条数
+ * @param {number} params.per_page - 每页条数
  * @param {string} params.plate_number - 车牌号
  */
 export function getPlateList(params) {
@@ -57,7 +57,7 @@ export function deletePlate(uuid) {
  * 获取用车申请列表
  * @param {Object} params - 查询参数
  * @param {number} params.page - 页码
- * @param {number} params.size - 每页条数
+ * @param {number} params.per_page - 每页条数
  * @param {number} params.mine - 是否我的用车(1=是)
  */
 export function getCarApplyList(params) {
@@ -124,7 +124,7 @@ export function deleteCarApply(uuid) {
  * 获取待处理的用车审批列表
  * @param {Object} params - 查询参数
  * @param {number} params.page - 页码
- * @param {number} params.size - 每页条数
+ * @param {number} params.per_page - 每页条数
  */
 export function getCarApproveTodo(params) {
   return request({
@@ -138,7 +138,7 @@ export function getCarApproveTodo(params) {
  * 获取已处理的用车审批列表
  * @param {Object} params - 查询参数
  * @param {number} params.page - 页码
- * @param {number} params.size - 每页条数
+ * @param {number} params.per_page - 每页条数
  */
 export function getCarApproveDone(params) {
   return request({

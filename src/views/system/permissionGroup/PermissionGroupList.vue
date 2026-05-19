@@ -77,9 +77,9 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="pagination.page"
-          :page-sizes="[10, 20, 50, 100]"
+          :page-sizes="pageSizes"
           :page-size="pagination.size"
-          layout="total, sizes, prev, pager, next, jumper"
+          layout="sizes, prev, pager, next, jumper, total"
           :total="pagination.total">
         </el-pagination>
       </div>
@@ -93,6 +93,7 @@ import {
   deletePermissionGroup,
   batchDeletePermissionGroup
 } from '@/api/permissionGroup'
+import { PAGINATION } from '@/config/constants'
 
 export default {
   name: 'PermissionGroupList',
@@ -107,10 +108,9 @@ export default {
       },
       pagination: {
         page: 1,
-        size: 10,
+        per_page: 10,
         total: 0
-      }
-    }
+      },}
   },
   created() {
     this.fetchGroupList()

@@ -171,4 +171,9 @@ html, body, #app {
 .el-pagination {
   margin-top: $spacing-md;
   text-align: right;
+
+  // 总条数左侧间距
+  .el-pagination__total {
+    margin-left: 10px;
+  }
 }
