@@ -116,7 +116,7 @@
         </el-timeline-item>
       </el-timeline>
 
-      <el-divider content-position="left">待办日志</el-divider>
+      <el-divider content-position="left">待办任务</el-divider>
       <el-timeline v-if="currentDetail && currentDetail.task_logs">
         <el-timeline-item
           v-for="(log, index) in currentDetail.task_logs"

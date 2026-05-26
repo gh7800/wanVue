@@ -92,9 +92,9 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="部门" prop="dept_uuid">
+        <el-form-item label="部门" prop="department_uuid">
           <el-cascader
-            v-model="form.dept_uuid"
+            v-model="form.department_uuid"
             :options="departmentList"
             :props="{ value: 'uuid', label: 'name', children: 'children', checkStrictly: true }"
             placeholder="请选择部门"
@@ -154,7 +154,7 @@ export default {
         password: '',
         real_name: '',
         company_uuid: '',
-        dept_uuid: '',
+        department_uuid: '',
         role_uuid: '',
         phone: '',
         email: '',
@@ -175,7 +175,7 @@ export default {
         company_uuid: [
           { required: true, message: '请选择公司', trigger: 'change' }
         ],
-        dept_uuid: [
+        department_uuid: [
           { required: true, message: '请选择部门', trigger: 'change' }
         ],
         role_uuid: [
@@ -250,7 +250,7 @@ export default {
         password: '',
         real_name: '',
         company_uuid: '',
-        dept_uuid: '',
+        department_uuid: '',
         role_uuid: '',
         phone: '',
         email: '',
@@ -264,7 +264,7 @@ export default {
 
     // 公司选择变化
     handleCompanyChange(companyUuid) {
-      this.form.dept_uuid = ''
+      this.form.department_uuid = ''
       this.fetchDepartmentTree(companyUuid)
     },
 
@@ -277,7 +277,7 @@ export default {
         username: row.username,
         real_name: row.real_name,
         company_uuid: row.company_uuid || '',
-        dept_uuid: row.dept_uuid || '',
+        department_uuid: row.department_uuid || '',
         role_uuid: row.role_uuid || '',
         phone: row.phone,
         email: row.email,
@@ -358,16 +358,25 @@ export default {
           if (this.form.uuid) {
             // 编辑：只传改动的字段
             const data = {}
-            const fields = ['username', 'real_name', 'phone', 'email', 'status']
+            const fields = ['username', 'real_name', 'company_uuid', 'department_uuid', 'role_uuid', 'phone', 'email', 'status']
             fields.forEach(field => {
               if (this.form[field] !== this.originalForm[field]) {
                 data[field] = this.form[field]
               }
             })
+            // 处理级联选择器返回的数组格式
+            if (data.department_uuid && Array.isArray(data.department_uuid)) {
+              data.department_uuid = data.department_uuid[data.department_uuid.length - 1]
+            }
             res = await this.updateUser({ uuid: this.form.uuid, data })
           } else {
             // 新增：传所有字段
-            res = await this.addUser(this.form)
+            const formData = { ...this.form }
+            // 处理级联选择器返回的数组格式
+            if (formData.department_uuid && Array.isArray(formData.department_uuid)) {
+              formData.department_uuid = formData.department_uuid[formData.department_uuid.length - 1]
+            }
+            res = await this.addUser(formData)
           }
           if (res.success) {
             this.$message.success(this.form.uuid ? '更新成功' : '新增成功')
