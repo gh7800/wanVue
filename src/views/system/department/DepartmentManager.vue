@@ -49,15 +49,14 @@
         style="width: 100%">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column prop="name" label="部门名称" min-width="150" tree-key="uuid"></el-table-column>
-        <el-table-column prop="code" label="部门编码" width="120"></el-table-column>
         <el-table-column prop="parent_name" label="上级部门" width="150">
           <template slot-scope="scope">
-            {{ scope.row.parent_name || '-' }}
+            {{ getParentDepartmentName(scope.row) || '-' }}
           </template>
         </el-table-column>
-        <el-table-column prop="leader_name" label="负责人" width="120">
+        <el-table-column prop="leader_id" label="负责人" width="120">
           <template slot-scope="scope">
-            {{ scope.row.leader_name || '-' }}
+            {{ scope.row.leader && scope.row.leader.real_name || '-' }}
           </template>
         </el-table-column>
         <el-table-column prop="sort" label="排序" width="80"></el-table-column>
@@ -72,7 +71,7 @@
         <el-table-column label="操作" width="250" fixed="right">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
-            <el-button size="mini" type="success" icon="el-icon-plus" @click="handleAddChild(scope.row)">添加子部门</el-button>
+            <!-- <el-button size="mini" type="success" icon="el-icon-plus" @click="handleAddChild(scope.row)">添加子部门</el-button> -->
             <el-button size="mini" type="danger" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -98,12 +97,9 @@
         <el-form-item label="部门名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入部门名称"></el-input>
         </el-form-item>
-        <el-form-item label="部门编码" prop="code">
-          <el-input v-model="form.code" placeholder="请输入部门编码"></el-input>
-        </el-form-item>
-        <el-form-item label="上级部门" prop="parent_uuid">
+        <el-form-item label="上级部门" prop="parent_id">
           <el-cascader
-            v-model="form.parent_uuid"
+            v-model="form.parent_id"
             :options="departmentTree"
             :props="{ value: 'uuid', label: 'name', children: 'children', checkStrictly: true, emitPath: false }"
             placeholder="请选择上级部门"
@@ -111,8 +107,8 @@
             clearable>
           </el-cascader>
         </el-form-item>
-        <el-form-item label="负责人" prop="leader_uuid">
-          <el-select v-model="form.leader_uuid" placeholder="请选择负责人" style="width: 100%" clearable>
+        <el-form-item label="负责人" prop="leader_id">
+          <el-select v-model="form.leader_id" placeholder="请选择负责人" style="width: 100%" clearable>
             <el-option
               v-for="item in userList"
               :key="item.uuid"
@@ -151,7 +147,6 @@ import {
   deleteDepartment
 } from '@/api/department'
 import { getUserList, getCompanyList } from '@/api/userManager'
-import { PAGINATION } from '@/config/constants'
 
 export default {
   name: 'DepartmentManager',
@@ -181,9 +176,8 @@ export default {
       form: {
         uuid: null,
         name: '',
-        code: '',
-        parent_uuid: '',
-        leader_uuid: '',
+        parent_id: '',
+        leader_id: '',
         sort: 0,
         status: 1,
         remark: ''
@@ -193,9 +187,8 @@ export default {
           { required: true, message: '请输入部门名称', trigger: 'blur' },
           { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' }
         ],
-        code: [
-          { required: true, message: '请输入部门编码', trigger: 'blur' },
-          { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' }
+        leader_id: [
+          { validator: this.validateLeader, trigger: 'change' }
         ],
         sort: [
           { required: true, message: '请输入排序', trigger: 'blur' }
@@ -228,7 +221,13 @@ export default {
         }
         const res = await getDepartmentTree(params)
         this.departmentList = res.data || []
-        this.departmentTree = [{ uuid: '', name: '顶级部门', children: res.data || [] }]
+        // 如果返回的数据中已经包含顶级部门，则直接使用
+        if (this.departmentList.length > 0 && this.departmentList[0].parent_id === null) {
+          this.departmentTree = this.departmentList
+        } else {
+          // 否则添加一个虚拟的顶级部门节点
+          this.departmentTree = [{ uuid: '', name: '顶级部门', children: res.data || [] }]
+        }
       } catch (error) {
         console.error('获取部门列表失败:', error)
       } finally {
@@ -272,9 +271,8 @@ export default {
       this.form = {
         uuid: null,
         name: '',
-        code: '',
-        parent_uuid: '',
-        leader_uuid: '',
+        parent_id: '',
+        leader_id: '',
         sort: 0,
         status: 1,
         remark: ''
@@ -290,9 +288,8 @@ export default {
       this.form = {
         uuid: null,
         name: '',
-        code: '',
-        parent_uuid: row.uuid,
-        leader_uuid: '',
+        parent_id: row.uuid,
+        leader_id: '',
         sort: 0,
         status: 1,
         remark: ''
@@ -311,9 +308,8 @@ export default {
         this.form = {
           uuid: data.uuid,
           name: data.name,
-          code: data.code,
-          parent_uuid: data.parent_uuid || '',
-          leader_uuid: data.leader_uuid || '',
+          parent_id: data.parent_id || '',
+          leader_id: data.leader_uuid || '',
           sort: data.sort || 0,
           status: data.status,
           remark: data.remark || ''
@@ -371,11 +367,12 @@ export default {
           try {
             const data = { ...this.form }
             delete data.uuid
-            if (!data.parent_uuid) {
-              data.parent_uuid = null
+            // 如果选择的是虚拟顶级部门(uuid为空字符串)，则设置为null
+            if (data.parent_id === '' || data.parent_id === null) {
+              data.parent_id = null
             }
-            if (!data.leader_uuid) {
-              data.leader_uuid = null
+            if (!data.leader_id) {
+              delete data.leader_id
             }
             if (this.form.uuid) {
               await updateDepartment(this.form.uuid, data)
@@ -403,6 +400,46 @@ export default {
     handleCurrentChange(val) {
       this.page.current = val
       this.fetchDepartmentTree()
+    },
+    // 验证负责人
+    validateLeader(rule, value, callback) {
+      if (value === '') {
+        callback()
+        return
+      }
+      const userExists = this.userList.some(user => user.uuid === value)
+      if (userExists) {
+        callback()
+      } else {
+        callback(new Error('请选择有效的负责人'))
+      }
+    },
+    // 获取父部门名称
+    getParentDepartmentName(row) {
+      // 如果有parent_name字段直接返回
+      if (row.parent_name) {
+        return row.parent_name
+      }
+      // 如果是顶级部门
+      if (!row.parent_id && row.parent_id !== 0) {
+        return ''
+      }
+      // 遍历树形结构查找父部门
+      const findParent = (departments, parentId) => {
+        for (let dept of departments) {
+          if (dept.uuid === parentId) {
+            return dept.name
+          }
+          if (dept.children && dept.children.length > 0) {
+            const found = findParent(dept.children, parentId)
+            if (found) {
+              return found
+            }
+          }
+        }
+        return ''
+      }
+      return findParent(this.departmentList, row.parent_id)
     }
   }
 }
@@ -433,4 +470,6 @@ export default {
     }
   }
 }
+
+
 </style>
