@@ -70,8 +70,9 @@
               <i class="el-icon-setting"></i>
               <span>系统设置</span>
             </template>
-            <el-menu-item index="userManager">用户管理</el-menu-item>
+            <el-menu-item index="companyManager">公司管理</el-menu-item>
             <el-menu-item index="departmentManager">部门管理</el-menu-item>
+            <el-menu-item index="userManager">用户管理</el-menu-item>
             <el-menu-item index="roleManager">角色管理</el-menu-item>
             <el-menu-item index="permissionManager">权限字典</el-menu-item>
             <el-menu-item index="permissionGroup">权限群组</el-menu-item>

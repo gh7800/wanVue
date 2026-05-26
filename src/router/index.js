@@ -53,6 +53,10 @@ const routes = [
                 component: () => import('../views/system/department/DepartmentManager.vue')
             },
             {
+                path: '/companyManager',
+                component: () => import('../views/system/company/CompanyManager.vue')
+            },
+            {
                 path: '/roleManager',
                 component: () => import('../views/system/role/RoleManager.vue')
             },
