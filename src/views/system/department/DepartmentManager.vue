@@ -48,7 +48,7 @@
         @selection-change="handleSelectionChange"
         style="width: 100%">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="name" label="部门名称" min-width="150" tree-key="uuid"></el-table-column>
+        <el-table-column prop="name" label="部门名称" min-width="150"></el-table-column>
         <el-table-column prop="parent_name" label="上级部门" width="150">
           <template slot-scope="scope">
             {{ getParentDepartmentName(scope.row) || '-' }}

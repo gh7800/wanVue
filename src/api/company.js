@@ -29,7 +29,7 @@ export function getCompanyTree() {
  */
 export function getCompany(uuid) {
   return request({
-    url: `/api/ company/${uuid}`,
+    url: `/api/company/${uuid}`,
     method: 'GET'
   })
 }

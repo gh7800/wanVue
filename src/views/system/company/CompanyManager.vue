@@ -35,14 +35,12 @@
         row-key="uuid"
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         @selection-change="handleSelectionChange"
-        style="width: 100%">
+        style="width: 100%"
+        :indent="30">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="name" label="公司名称" min-width="200" tree-key="uuid">
+        <el-table-column prop="name" label="公司名称" min-width="200">
           <template slot-scope="scope">
-            <div class="company-name-cell">
-              <i class="el-icon-office-building" style="margin-right: 8px; color: #409EFF;"></i>
-              {{ scope.row.name }}
-            </div>
+            {{ scope.row.name }}
           </template>
         </el-table-column>
         <el-table-column prop="parent_name" label="上级公司" width="180">
@@ -397,5 +395,11 @@ export default {
     margin-top: 20px;
     text-align: right;
   }
+}
+</style>
+
+<style lang="scss">
+.el-table__indent {
+  display: inline-block;
 }
 </style>
