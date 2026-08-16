@@ -91,6 +91,10 @@ const routes = [
             {
                 path: '/carManage',
                 component: () => import('../views/car/CarManage.vue')
+            },
+            {
+                path: '/aiAssistant',
+                component: () => import('../views/AiAssistant.vue')
             }
         ]
     },

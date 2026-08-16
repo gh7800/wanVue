@@ -24,6 +24,10 @@
             <i class="el-icon-s-home"></i>
             <span slot="title">首页</span>
           </el-menu-item>
+          <el-menu-item index="aiAssistant">
+            <i class="el-icon-chat-dot-round"></i>
+            <span slot="title">AI助理</span>
+          </el-menu-item>
           <el-submenu index="1">
             <template slot="title">
               <i class="el-icon-edit"></i>
