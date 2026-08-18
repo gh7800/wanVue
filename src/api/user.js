@@ -15,3 +15,11 @@ export function logout() {
         method: 'POST'
     })
 }
+
+export function register(data) {
+    return request({
+        url: '/auth/register',
+        method: 'POST',
+        data
+    })
+}

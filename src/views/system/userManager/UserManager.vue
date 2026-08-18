@@ -159,14 +159,24 @@ export default {
         phone: '',
         email: '',
         status: 1
-      },
-      rules: {
+      }
+    }
+  },
+  computed: {
+    ...mapGetters('userManager', ['userList', 'loading', 'page', 'searchForm', 'companyList', 'departmentList', 'roleList']),
+    // 是否编辑模式（编辑时 uuid 已存在）
+    isEdit() {
+      return !!this.form.uuid
+    },
+    // 校验规则：新增时部门、角色必填；编辑时改为非必填
+    rules() {
+      return {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
           { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
         ],
         password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
+          { required: !this.isEdit, message: '请输入密码', trigger: 'blur' },
           { min: 6, max: 20, message: '长度在 6 到 20 个字符', trigger: 'blur' }
         ],
         real_name: [
@@ -176,10 +186,10 @@ export default {
           { required: true, message: '请选择公司', trigger: 'change' }
         ],
         department_uuid: [
-          { required: true, message: '请选择部门', trigger: 'change' }
+          { required: !this.isEdit, message: '请选择部门', trigger: 'change' }
         ],
         role_uuid: [
-          { required: true, message: '请选择角色', trigger: 'change' }
+          { required: !this.isEdit, message: '请选择角色', trigger: 'change' }
         ],
         phone: [
           { pattern: /^1[3-9]\d{9}$/, message: '手机号格式不正确', trigger: 'blur' }
@@ -189,9 +199,6 @@ export default {
         ]
       }
     }
-  },
-  computed: {
-    ...mapGetters('userManager', ['userList', 'loading', 'page', 'searchForm', 'companyList', 'departmentList', 'roleList'])
   },
   created() {
     this.fetchUserList()

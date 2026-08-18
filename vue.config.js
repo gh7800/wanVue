@@ -15,7 +15,7 @@ module.exports = {
     css: {
         loaderOptions: {
             scss: {
-                additionalData: `@import "./src/scss/variables.scss";`
+                additionalData: `@import "@/scss/variables.scss";`
             }
         }
     },
@@ -40,9 +40,9 @@ module.exports = {
         https: false,
         hotOnly: false, // 热更新
         proxy: {
-            // 所有API请求代理
+            // 所有API请求代理到后端服务器
             "/": {
-                target: "http://127.0.0.1:8000/",
+                target: "http://47.93.14.46/",//"http://127.0.0.1:8000/",
                 secure: false,
                 changeOrigin: true,
                 ws: true,

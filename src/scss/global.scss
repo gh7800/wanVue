@@ -139,12 +139,12 @@ html, body, #app {
   border-radius: $border-radius-medium;
   
   &--primary {
-    background: linear-gradient(135deg, $primary-color 0%, darken($primary-color, 8%) 100%);
+    background: linear-gradient(135deg, $primary-color 0%, #2F67EA 100%); // #2F67EA 等同 darken($primary-color, 8%)
     border: none;
-    
+
     &:hover,
     &:focus {
-      background: linear-gradient(135deg, lighten($primary-color, 5%) 0%, $primary-color 100%);
+      background: linear-gradient(135deg, #6B93F0 0%, $primary-color 100%); // #6B93F0 等同 lighten($primary-color, 5%)
     }
   }
 }
