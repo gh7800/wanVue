@@ -42,7 +42,7 @@ module.exports = {
         proxy: {
             // 所有API请求代理到后端服务器
             "/": {
-                target: "http://47.93.14.46/",//"http://127.0.0.1:8000/",
+                target: "http://47.93.14.46:8080/",//"http://127.0.0.1:8000/",
                 secure: false,
                 changeOrigin: true,
                 ws: true,
