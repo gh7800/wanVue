@@ -14,7 +14,8 @@
         <div v-for="(m, i) in messages" :key="i" class="ai-row" :class="m.role">
           <div class="ai-bubble">
             <span v-if="m.content">{{ m.content }}</span>
-            <span v-else class="ai-typing">正在思考…</span>
+            <span v-else-if="!m.chart" class="ai-typing">正在思考…</span>
+            <div v-if="m.chart" :ref="'chart' + i" class="ai-chart"></div>
           </div>
         </div>
       </div>
@@ -40,6 +41,7 @@
 </template>
 
 <script>
+import * as echarts from 'echarts'
 import { streamChat } from '@/api/ai'
 
 export default {
@@ -48,14 +50,42 @@ export default {
     return {
       input: '',
       loading: false,
-      messages: []
+      messages: [],
+      chartInstances: []
     }
+  },
+  mounted() {
+    window.addEventListener('resize', this.handleResize)
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.handleResize)
+    this.chartInstances.forEach(c => c.dispose())
+    this.chartInstances = []
   },
   methods: {
     handleEnter(e) {
       if (e.shiftKey) return
       e.preventDefault()
       this.send()
+    },
+    handleResize() {
+      this.chartInstances.forEach(c => c.resize())
+    },
+    renderChart(idx, option) {
+      this.$nextTick(() => {
+        let el = this.$refs['chart' + idx]
+        el = Array.isArray(el) ? el[0] : el
+        if (!el) return
+        // 等浏览器布局完再初始化（v-if 刚创建的容器 clientWidth 可能为 0）
+        requestAnimationFrame(() => {
+          if (!el._chart) {
+            el._chart = echarts.init(el)
+            this.chartInstances.push(el._chart)
+          }
+          el._chart.setOption(option)
+          el._chart.resize()  // 强制按当前容器真实尺寸重排
+        })
+      })
     },
     send() {
       const text = this.input.trim()
@@ -72,7 +102,14 @@ export default {
       streamChat(
         text,
         (full) => {
-          this.$set(this.messages, aiIndex, { role: 'assistant', content: full })
+          // 只更新 content 字段，保留 chart（避免被整个对象替换时丢掉）
+          this.$set(this.messages[aiIndex], 'content', full)
+          this.scrollBottom()
+        },
+        (chart) => {
+          // 只追加 chart 字段，保留 content（如果文字先到也不会丢）
+          this.$set(this.messages[aiIndex], 'chart', chart)
+          this.renderChart(aiIndex, chart)
           this.scrollBottom()
         },
         () => {
@@ -169,6 +206,14 @@ export default {
 }
 .ai-typing {
   color: #999;
+}
+.ai-chart {
+  width: 100%;
+  height: 300px;
+  margin-top: 10px;
+  background: #fff;
+  border: 1px solid #ebeef5;
+  border-radius: 8px;
 }
 .ai-input {
   display: flex;
