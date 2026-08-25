@@ -80,7 +80,9 @@ export function addGroupUser(uuid, data) {
   return request({
     url: `/api/permission/group/${uuid}/user`,
     method: 'post',
-    data
+    data,
+    // 保存群组时逐个调用，跳过全局 loading，避免全屏遮罩反复开关导致页面闪烁
+    loading: true
   })
 }
 
@@ -105,7 +107,9 @@ export function addGroupPermission(uuid, data) {
   return request({
     url: `/api/permission/group/${uuid}/permission`,
     method: 'post',
-    data
+    data,
+    // 保存群组时逐个调用，跳过全局 loading，避免全屏遮罩反复开关导致页面闪烁
+    loading: true
   })
 }
 

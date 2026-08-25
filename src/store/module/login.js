@@ -39,14 +39,18 @@ const actions = {
     },
 
     logout({ commit }) {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             logout()
                 .then(() => {
                     cleanUserInfo()
                     resolve()
                 })
-                .catch(error => {
-                    reject(error)
+                .catch(() => {
+                    // 后端登出接口失败（认证错误/Token 过期/网络异常）时，
+                    // 仍强制清除本地登录态并正常返回，让页面直接退到登录页，
+                    // 避免用户被卡在系统里退不出去
+                    cleanUserInfo()
+                    resolve()
                 })
         })
     }

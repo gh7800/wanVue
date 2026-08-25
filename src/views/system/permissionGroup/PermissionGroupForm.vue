@@ -23,7 +23,7 @@
       </el-form>
 
       <!-- 人员选择区域 -->
-      <div v-if="form.type === 'user' || !form.type" class="section">
+      <div class="section">
         <div class="section-title">群组成员</div>
         <div v-if="!isDetail" class="section-header">
           <el-button type="primary" icon="el-icon-plus" @click="showUserSelector = true">选择人员</el-button>

@@ -20,11 +20,11 @@
             <el-image :src="require('../assets/icon_logo.png')" class="logo-image" v-model="isCollapse">
             </el-image>
           </div>
-          <el-menu-item index="main">
+          <el-menu-item index="/main">
             <i class="el-icon-s-home"></i>
             <span slot="title">首页</span>
           </el-menu-item>
-          <el-menu-item index="aiAssistant">
+          <el-menu-item index="/aiAssistant">
             <i class="el-icon-chat-dot-round"></i>
             <span slot="title">AI助理</span>
           </el-menu-item>
@@ -33,18 +33,18 @@
               <i class="el-icon-edit"></i>
               <span>公文管理</span>
             </template>
-            <el-menu-item index="addUser">我的请示</el-menu-item>
-            <el-menu-item index="UserList">收文管理</el-menu-item>
+            <el-menu-item index="/myRequest">我的请示</el-menu-item>
+            <el-menu-item index="/receiveDoc">收文管理</el-menu-item>
           </el-submenu>
           <el-submenu index="2">
             <template slot="title">
               <i class="el-icon-magic-stick"></i>
               <span>用车管理</span>
             </template>
-            <el-menu-item index="myCar">我的用车</el-menu-item>
-            <el-menu-item index="carApprove">用车处理</el-menu-item>
-            <el-menu-item index="carManage">用车管理</el-menu-item>
-            <el-menu-item index="plateManager">车牌管理</el-menu-item>
+            <el-menu-item index="/myCar">我的用车</el-menu-item>
+            <el-menu-item index="/carApprove">用车处理</el-menu-item>
+            <el-menu-item index="/carManage">用车管理</el-menu-item>
+            <el-menu-item index="/plateManager">车牌管理</el-menu-item>
           </el-submenu>
           <el-submenu index="3">
             <template slot="title">
@@ -74,13 +74,13 @@
               <i class="el-icon-setting"></i>
               <span>系统设置</span>
             </template>
-            <el-menu-item index="companyManager">公司管理</el-menu-item>
-            <el-menu-item index="departmentManager">部门管理</el-menu-item>
-            <el-menu-item index="userManager">用户管理</el-menu-item>
-            <el-menu-item index="roleManager">角色管理</el-menu-item>
-            <el-menu-item index="permissionManager">权限字典</el-menu-item>
-            <el-menu-item index="permissionGroup">权限群组</el-menu-item>
-            <el-menu-item index="userInfo">个人信息</el-menu-item>
+            <el-menu-item index="/companyManager">公司管理</el-menu-item>
+            <el-menu-item index="/departmentManager">部门管理</el-menu-item>
+            <el-menu-item index="/userManager">用户管理</el-menu-item>
+            <el-menu-item index="/roleManager">角色管理</el-menu-item>
+            <el-menu-item index="/permissionManager">权限字典</el-menu-item>
+            <el-menu-item index="/permissionGroup">权限群组</el-menu-item>
+            <el-menu-item index="/userInfo">个人信息</el-menu-item>
           </el-submenu>
         </el-menu>
       </el-aside>
@@ -180,7 +180,8 @@ export default {
             this.$message.success('退出成功')
             this.$router.push('/')
           }).catch(() => {
-            this.$message.error('退出失败')
+            // 兜底：即使登出过程异常，也强制回到登录页
+            this.$router.push('/')
           })
         }).catch(() => {})
       } else if (command === 'profile') {

@@ -45,6 +45,16 @@ const routes = [
                 component : ()=> import('../views/UserList.vue')
             },
             {
+                path: '/myRequest',
+                component: () => import('../views/document/MyRequest.vue'),
+                meta: { title: '我的请示' }
+            },
+            {
+                path: '/receiveDoc',
+                component: () => import('../views/document/ReceiveDoc.vue'),
+                meta: { title: '收文管理' }
+            },
+            {
                 path: '/userManager',
                 component: () => import('../views/system/userManager/UserManager.vue')
             },

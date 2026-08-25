@@ -3,15 +3,17 @@ import { getToken } from '@/utils/auth'
 /**
  * 调用后端 AI 助理流式接口（SSE），读取返回并逐段回调。
  * 不走普通 axios 拦截器（它要求 {success,data} JSON），这里用 fetch 读流。
- * 支持两种事件：token（文字流）与 chart（ECharts 配置，一次性）。
+ * 支持三种事件：token（文字流）、chart（ECharts 配置，一次性）、
+ * action（快捷动作卡片配置 {key,label}，一次性，前端查注册表渲染按钮）。
  *
  * @param {string} message      用户问题
  * @param {function} onToken    每收到一段文本时回调，参数为当前完整回复
  * @param {function} [onChart]  收到图表配置时回调，参数为 ECharts option
+ * @param {function} [onAction] 收到动作配置时回调，参数为 {key,label}
  * @param {function} [onDone]   流结束（[DONE]）时回调，参数为完整回复
  * @param {function} [onError]  出错时回调，参数为错误信息
  */
-export function streamChat(message, onToken, onChart, onDone, onError) {
+export function streamChat(message, onToken, onChart, onAction, onDone, onError) {
   const token = getToken()
   // 去掉结尾斜杠，避免 "/" + "/api" 拼成 "//api"（协议相对 URL 错误）
   const base = (process.env.VUE_APP_BASE_API || '').replace(/\/+$/, '')
@@ -56,6 +58,8 @@ export function streamChat(message, onToken, onChart, onDone, onError) {
               if (onToken) onToken(full)
             } else if (json.chart) {
               if (onChart) onChart(json.chart)
+            } else if (json.action) {
+              if (onAction) onAction(json.action)
             } else if (json.error) {
               if (onError) onError(json.error)
             }
