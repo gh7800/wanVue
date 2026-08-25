@@ -272,32 +272,28 @@ export default {
     // 文件列表变化
     handleFileChange(file, fileList) {
       this.fileList = fileList
-      this.form.files = fileList
-        .filter(f => f.status === 'success' && f.response && f.response.data)
-        .map(f => {
-          const d = f.response.data
-          const item = Array.isArray(d) ? d[0] : d
-          return {
-            file_name: item.title,
-            file_path: item.file_path,
-            title: item.title
-          }
-        })
+      this.form.files = this.resolveFiles(fileList)
     },
     // 移除附件
     handleFileRemove(file, fileList) {
       this.fileList = fileList
-      this.form.files = fileList
-        .filter(f => f.status === 'success' && f.response && f.response.data)
+      this.form.files = this.resolveFiles(fileList)
+    },
+    // 从上传响应中提取文件信息（上传接口返回 {success,message,data:{title,file_name,file_path}}）
+    resolveFiles(fileList) {
+      return fileList
+        .filter(f => f.status === 'success' && f.response && f.response.data && f.response.data.data)
         .map(f => {
-          const d = f.response.data
+          const d = f.response.data.data
           const item = Array.isArray(d) ? d[0] : d
+          if (!item) return null
           return {
-            file_name: item.title,
+            file_name: item.file_name || item.title || '',
             file_path: item.file_path,
-            title: item.title
+            title: item.title || item.file_name || ''
           }
         })
+        .filter(Boolean)
     },
     // 超出数量限制
     handleExceed() {
@@ -305,6 +301,10 @@ export default {
     },
     // 提交
     handleSubmit() {
+      if (this.uploading) {
+        this.$message.warning('附件上传中，请稍候再提交')
+        return
+      }
       this.$refs.form.validate(async (valid) => {
         if (valid) {
           this.submitLoading = true
