@@ -261,6 +261,17 @@ export default {
         const formData = new FormData()
         formData.append('files[]', options.file)
         const res = await uploadDocumentFiles(formData)
+        // 直接从 axios 响应里取文件信息，push 到 form.files（不依赖 el-upload 的 on-change/on-success）
+        const data = res && res.data ? res.data : null
+        const item = Array.isArray(data) ? data[0] : data
+        if (item) {
+          this.form.files.push({
+            uid: options.file.uid,
+            file_name: item.file_name || item.title || options.file.name,
+            file_path: item.file_path,
+            title: item.title || item.file_name || options.file.name
+          })
+        }
         options.onSuccess(res)
       } catch (error) {
         options.onError(error)
@@ -269,31 +280,14 @@ export default {
         this.uploading = false
       }
     },
-    // 文件列表变化
+    // 文件列表变化（仅同步显示，不处理已成功的 —— 由 handleUpload 自行 push 到 form.files）
     handleFileChange(file, fileList) {
       this.fileList = fileList
-      this.form.files = this.resolveFiles(fileList)
     },
-    // 移除附件
+    // 移除附件：按 uid 反查并从 form.files 中删除
     handleFileRemove(file, fileList) {
       this.fileList = fileList
-      this.form.files = this.resolveFiles(fileList)
-    },
-    // 从上传响应中提取文件信息（上传接口返回 {success,message,data:{title,file_name,file_path}}）
-    resolveFiles(fileList) {
-      return fileList
-        .filter(f => f.status === 'success' && f.response && f.response.data && f.response.data.data)
-        .map(f => {
-          const d = f.response.data.data
-          const item = Array.isArray(d) ? d[0] : d
-          if (!item) return null
-          return {
-            file_name: item.file_name || item.title || '',
-            file_path: item.file_path,
-            title: item.title || item.file_name || ''
-          }
-        })
-        .filter(Boolean)
+      this.form.files = this.form.files.filter(f => f.uid !== file.uid)
     },
     // 超出数量限制
     handleExceed() {
@@ -309,7 +303,16 @@ export default {
         if (valid) {
           this.submitLoading = true
           try {
-            await createDocument(this.form)
+            // 提交前清理：只保留后端需要的字段，去掉前端用于关联删除的 uid
+            const cleanFiles = (this.form.files || []).map(f => ({
+              file_name: f.file_name,
+              file_path: f.file_path,
+              title: f.title
+            }))
+            await createDocument({
+              ...this.form,
+              files: cleanFiles
+            })
             this.$message.success('提交成功')
             this.dialogVisible = false
             this.fetchList()
