@@ -1,4 +1,53 @@
 import { getToken } from '@/utils/auth'
+import request from '@/utils/request'
+
+/**
+ * 获取“我的对话”列表（分页，供左侧历史列表 + 加载更多）。
+ * @param {Object} params { page, per_page }
+ */
+export function getConversationList(params) {
+  return request({
+    url: '/api/ai/conversations',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 新建对话（首轮问答结束后调用），返回 { id, ... }
+ * @param {Object} data { title?, messages:[{role,content,chart?,action?}] }
+ */
+export function createConversation(data) {
+  return request({
+    url: '/api/ai/conversations',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 更新对话（后续每轮结束后调用，全量覆盖 messages）
+ * @param {number|string} id
+ * @param {Object} data { title?, messages:[...] }
+ */
+export function updateConversation(id, data) {
+  return request({
+    url: `/api/ai/conversations/${id}`,
+    method: 'put',
+    data
+  })
+}
+
+/**
+ * 获取对话详情（点击历史项时回载整段对话，含图表配置）
+ * @param {number|string} id
+ */
+export function getConversation(id) {
+  return request({
+    url: `/api/ai/conversations/${id}`,
+    method: 'get'
+  })
+}
 
 /**
  * 调用后端 AI 助理流式接口（SSE），读取返回并逐段回调。

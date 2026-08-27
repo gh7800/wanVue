@@ -1,5 +1,48 @@
 <template>
   <div class="ai-page">
+    <!-- 左侧：新对话 + 我的历史对话列表 -->
+    <div class="ai-sidebar">
+      <div class="ai-sidebar-top">
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          class="ai-new-btn"
+          @click="newChat"
+        >开启新对话</el-button>
+      </div>
+
+      <div class="ai-history">
+        <template v-if="conversations.length">
+          <div
+            v-for="item in conversations"
+            :key="item.id"
+            class="ai-history-item"
+            :class="{ active: item.id === currentId }"
+            @click="selectConversation(item)"
+          >
+            <div class="ai-history-title">{{ item.title || '未命名对话' }}</div>
+            <div class="ai-history-meta">
+              <span class="ai-history-time">{{ formatTime(item.updated_at) }}</span>
+              <span class="ai-history-count">{{ item.message_count }} 条</span>
+            </div>
+            <div class="ai-history-preview">{{ item.last_message }}</div>
+          </div>
+        </template>
+        <div v-else-if="loadingList" class="ai-history-empty">加载中…</div>
+        <div v-else class="ai-history-empty">暂无历史对话</div>
+      </div>
+
+      <div v-if="hasMore" class="ai-sidebar-bottom">
+        <el-button
+          type="text"
+          class="ai-loadmore"
+          :loading="loadingList"
+          @click="loadMore"
+        >加载更多</el-button>
+      </div>
+    </div>
+
+    <!-- 右侧：对话区 -->
     <div class="ai-card">
       <div class="ai-header">
         <i class="el-icon-chat-dot-round"></i>
@@ -58,7 +101,13 @@
 
 <script>
 import * as echarts from 'echarts'
-import { streamChat } from '@/api/ai'
+import {
+  streamChat,
+  getConversationList,
+  createConversation,
+  updateConversation,
+  getConversation
+} from '@/api/ai'
 import { exportCarApply, exportCarApproveTodo, exportCarApproveDone } from '@/api/car'
 import { downloadBlob } from '@/utils/download'
 
@@ -89,11 +138,20 @@ export default {
       input: '',
       loading: false,
       messages: [],
-      chartInstances: []
+      chartInstances: [],
+      // —— 历史对话侧边栏状态 ——
+      conversations: [],   // 我的历史对话列表
+      currentId: null,      // 当前打开的会话 id（null 表示新会话）
+      listPage: 1,          // 历史列表分页
+      hasMore: false,       // 是否还有更多（加载更多）
+      loadingList: false,   // 列表加载中
+      saving: false         // 保存对话中（防重复）
     }
   },
   mounted() {
     window.addEventListener('resize', this.handleResize)
+    // 进入页面即加载“我的历史对话”第一页
+    this.loadConversations(true)
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.handleResize)
@@ -101,6 +159,136 @@ export default {
     this.chartInstances = []
   },
   methods: {
+    /* ============ 历史对话列表 ============ */
+    loadConversations(reset = true) {
+      if (reset) this.listPage = 1
+      this.loadingList = true
+      getConversationList({ page: this.listPage, per_page: 20 })
+        .then(res => {
+          // request 拦截器返回 {success, data, paginator}；data 即列表数组
+          const list = res.data || []
+          this.conversations = reset ? list : this.conversations.concat(list)
+          const p = res.paginator
+          this.hasMore = !!(p && p.current < p.last)
+        })
+        .catch(() => { this.hasMore = false })
+        .finally(() => { this.loadingList = false })
+    },
+    loadMore() {
+      if (this.loadingList) return
+      this.listPage += 1
+      this.loadConversations(false)
+    },
+    newChat() {
+      this.currentId = null
+      this.messages = []
+      this.input = ''
+    },
+    selectConversation(item) {
+      if (item.id === this.currentId || this.loadingList) return
+      this.loadingList = true
+      getConversation(item.id)
+        .then(res => {
+          // res.data 即对话详情对象 {id,title,messages,...}
+          const data = res.data || {}
+          this.currentId = data.id
+          this.messages = this.hydrate(data.messages || [])
+          this.scrollBottom()
+        })
+        .catch(() => {})
+        .finally(() => { this.loadingList = false })
+    },
+    /**
+     * 把后端存回的消息数组还原为页面内部消息对象，并调度图表重绘。
+     */
+    hydrate(raw) {
+      const msgs = (raw || []).map(m => {
+        const item = { role: m.role, content: m.content || '' }
+        if (m.chart) item.chart = m.chart
+        if (m.action && m.action.key) {
+          item.action = { key: m.action.key, label: m.action.label, loading: false, done: false }
+        }
+        return item
+      })
+      this.$nextTick(() => {
+        msgs.forEach((m, idx) => {
+          if (m.chart) this.renderChart(idx, m.chart)
+        })
+      })
+      return msgs
+    },
+    /**
+     * 对话结束后保存：新会话 POST 创建（拿到 id），已存在会话 PUT 更新。
+     * 失败时静默，不影响当前对话浏览。
+     */
+    saveCurrent() {
+      if (this.saving) return
+      const payload = this.serializeMessages(this.messages)
+      if (payload.length === 0) return
+      this.saving = true
+      const run = (id) =>
+        id == null
+          ? createConversation({ messages: payload }).then(res => res.data.id)
+          : updateConversation(id, { messages: payload }).then(() => id)
+      run(this.currentId)
+        .then(id => {
+          this.currentId = id
+          this.syncList(id, payload)
+        })
+        .catch(() => {})
+        .finally(() => { this.saving = false })
+    },
+    serializeMessages(list) {
+      return (list || [])
+        .map(m => {
+          const item = { role: m.role, content: m.content || '' }
+          if (m.chart) item.chart = m.chart
+          if (m.action && m.action.key) item.action = { key: m.action.key, label: m.action.label || '' }
+          return item
+        })
+        .filter(m => m.content !== '' || m.chart || m.action)
+    },
+    /**
+     * 保存成功后同步左侧列表：已存在则更新预览，新会话则置顶插入。
+     */
+    syncList(id, payload) {
+      const firstUser = payload.find(m => m.role === 'user' && m.content)
+      const last = payload[payload.length - 1]
+      const title = (firstUser ? firstUser.content : '新对话').slice(0, 50)
+      const preview = (last ? last.content : '').slice(0, 100)
+      const existed = this.conversations.find(c => c.id === id)
+      if (existed) {
+        existed.title = title
+        existed.last_message = preview
+        existed.message_count = payload.length
+        existed.updated_at = this.formatNow()
+      } else {
+        this.conversations.unshift({
+          id,
+          title,
+          last_message: preview,
+          message_count: payload.length,
+          updated_at: this.formatNow()
+        })
+      }
+    },
+    formatTime(ts) {
+      if (!ts) return ''
+      const d = new Date(String(ts).replace(/-/g, '/'))
+      if (isNaN(d.getTime())) return ts
+      const pad = n => (n < 10 ? '0' + n : '' + n)
+      const now = new Date()
+      const hm = pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes())
+      return d.getFullYear() === now.getFullYear() ? hm : d.getFullYear() + '-' + hm
+    },
+    formatNow() {
+      const d = new Date()
+      const pad = n => (n < 10 ? '0' + n : '' + n)
+      return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) +
+        ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds())
+    },
+
+    /* ============ 对话交互（原有逻辑） ============ */
     handleEnter(e) {
       if (e.shiftKey) return
       e.preventDefault()
@@ -157,6 +345,8 @@ export default {
         },
         () => {
           this.loading = false
+          // 一轮问答结束，持久化对话（新会话创建 / 已有会话更新）
+          this.saveCurrent()
         },
         (err) => {
           this.$set(this.messages, aiIndex, { role: 'assistant', content: '出错了：' + err })
@@ -215,8 +405,87 @@ export default {
   height: calc(100% - 75px);
   padding: 16px;
   box-sizing: border-box;
+  display: flex;
+  gap: 16px;
 }
+/* ============ 左侧历史侧边栏 ============ */
+.ai-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #ebeef5;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.ai-sidebar-top {
+  padding: 12px;
+  border-bottom: 1px solid #ebeef5;
+}
+.ai-new-btn {
+  width: 100%;
+}
+.ai-history {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+.ai-history-empty {
+  color: #999;
+  text-align: center;
+  margin-top: 30px;
+  font-size: 13px;
+}
+.ai-history-item {
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 6px;
+  border: 1px solid transparent;
+  transition: all .15s;
+}
+.ai-history-item:hover {
+  background: #f5f7fa;
+}
+.ai-history-item.active {
+  background: #eef3ff;
+  border-color: #d9e2f7;
+}
+.ai-history-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #303133;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ai-history-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #999;
+  margin: 4px 0 2px;
+}
+.ai-history-preview {
+  font-size: 12px;
+  color: #8a8a8a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ai-sidebar-bottom {
+  padding: 8px;
+  border-top: 1px solid #ebeef5;
+  text-align: center;
+}
+.ai-loadmore {
+  font-size: 13px;
+}
+/* ============ 右侧对话区 ============ */
 .ai-card {
+  flex: 1;
+  min-width: 0;
   height: 100%;
   display: flex;
   flex-direction: column;
