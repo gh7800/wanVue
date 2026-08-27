@@ -302,14 +302,25 @@ export default {
         let el = this.$refs['chart' + idx]
         el = Array.isArray(el) ? el[0] : el
         if (!el) return
-        // 等浏览器布局完再初始化（v-if 刚创建的容器 clientWidth 可能为 0）
-        requestAnimationFrame(() => {
+        // 双帧等待 + 尺寸检测：v-if 刚创建的容器在 flex+scroll 嵌套中，
+        // 单次 rAF 时 clientWidth 可能仍为 0，导致 ECharts 画出白板。
+        // 拖动浏览器边框能触发 resize() 显示图表，就是这个原因。
+        const tryInit = () => {
+          if (!el) return
+          if (el.clientWidth === 0 || el.clientHeight === 0) {
+            requestAnimationFrame(tryInit) // 容器还没尺寸，继续等
+            return
+          }
           if (!el._chart) {
             el._chart = echarts.init(el)
             this.chartInstances.push(el._chart)
           }
           el._chart.setOption(option)
-          el._chart.resize()  // 强制按当前容器真实尺寸重排
+          el._chart.resize()
+        }
+        // 第一帧等 DOM 更新，第二帧等布局收敛
+        requestAnimationFrame(() => {
+          requestAnimationFrame(tryInit)
         })
       })
     },
