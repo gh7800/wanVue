@@ -61,8 +61,9 @@ export function getConversation(id) {
  * @param {function} [onAction] 收到动作配置时回调，参数为 {key,label}
  * @param {function} [onDone]   流结束（[DONE]）时回调，参数为完整回复
  * @param {function} [onError]  出错时回调，参数为错误信息
+ * @param {number|string} [conversationId] 会话 id；传入则后端从已存对话拼回历史上下文，实现多轮记忆
  */
-export function streamChat(message, onToken, onChart, onAction, onDone, onError) {
+export function streamChat(message, onToken, onChart, onAction, onDone, onError, conversationId) {
   const token = getToken()
   // 去掉结尾斜杠，避免 "/" + "/api" 拼成 "//api"（协议相对 URL 错误）
   const base = (process.env.VUE_APP_BASE_API || '').replace(/\/+$/, '')
@@ -73,7 +74,7 @@ export function streamChat(message, onToken, onChart, onAction, onDone, onError)
       'Content-Type': 'application/json',
       'Authorization': token ? `Bearer ${token}` : ''
     },
-    body: JSON.stringify({ message })
+    body: JSON.stringify({ message, conversation_id: conversationId || '' })
   })
     .then(res => {
       if (!res.ok) {

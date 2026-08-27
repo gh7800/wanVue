@@ -352,7 +352,8 @@ export default {
           this.$set(this.messages, aiIndex, { role: 'assistant', content: '出错了：' + err })
           this.loading = false
           this.$message.error(err)
-        }
+        },
+        this.currentId
       )
     },
     scrollBottom() {
